@@ -1,0 +1,7 @@
+{
+	"name": "Loader AI",
+	"version": "0.0.1",
+	"author": "ebe1.kenobi",
+	"description": "Loader AI",
+	"dll": "TFModFortRiseLoaderAI.dll"
+}

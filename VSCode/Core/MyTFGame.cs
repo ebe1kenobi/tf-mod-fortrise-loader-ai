@@ -34,7 +34,8 @@ namespace TFModFortRiseLoaderAI
           TFModFortRiseLoaderAIModule.savedHumanPlayerInput[i] = TFGame.PlayerInputs[i];
         }
         TFModFortRiseLoaderAIModule.isHumanPlayerTypeSaved = true;
-        AI.CreateAgent();
+        TFModFortRiseLoaderAIModule.canAddAgent = true;
+        //AI.CreateAgent();
       }
 
       orig(self, gameTime);

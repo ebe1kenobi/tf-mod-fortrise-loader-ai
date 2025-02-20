@@ -7,24 +7,22 @@ namespace TFModFortRiseLoaderAI
     public static class AI
   {
     public static bool isAgentReady = false;
-    private static Agent[] agents = new Agent[8];
-    public static PlayerInput[] AgentInputs = new PlayerInput[8];
+    private static Agent[] agents;
+    public static PlayerInput[] AgentInputs;
 
     public static void CreateAgent()
     {
       if (isAgentReady) return;
+      int max = TFModFortRiseLoaderAIModule.EightPlayerMod ? 8 : 4;
+      agents = new Agent[max];
+      AgentInputs = new PlayerInput[max];
       //detect first player slot free
-      for (int i = 0; i < TFGame.Players.Length; i++) //todo use everywhere
+      for (int i = 0; i < max; i++) //todo use everywhere
       {
         // create an agent for each player
         AgentInputs[i] = new Input(i);
         agents[i] = new AIAgent(i, "AI", AgentInputs[i]);
-        Logger.Info("Agent " + i + " Created");
-        TFModFortRiseLoaderAIModule.nbPlayerType[i]++;
-        if (null != TFGame.PlayerInputs[i]) continue;
-        TFGame.PlayerInputs[i] = AgentInputs[i]; // default AI
-        Logger.Info("PlayerInputs " + i + " set : " + TFGame.PlayerInputs[i].GetType().ToString());
-        TFModFortRiseLoaderAIModule.currentPlayerType[i] = "AI";
+        //Logger.Info("Agent " + i + " Created");
       }
       ModExports.addAgent("AI", agents);
       isAgentReady = true;

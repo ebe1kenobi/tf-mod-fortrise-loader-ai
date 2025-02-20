@@ -30,7 +30,6 @@ namespace TFModFortRiseLoaderAI
       if (agent.Dead)
       {
         this.input.prevInputState = this.input.GetCopy(this.input.inputState);
-        //Logger.Info("ici 2 => " + index);
         return;
       }
 
@@ -92,7 +91,6 @@ namespace TFModFortRiseLoaderAI
       if (enemy == null)
       {
         this.input.prevInputState = this.input.GetCopy(this.input.inputState);
-        //Logger.Info("ici 3 => " + index);
         return;
       }
 
@@ -282,9 +280,6 @@ namespace TFModFortRiseLoaderAI
       }
 
       this.input.prevInputState = this.input.GetCopy(this.input.inputState);
-
-      //Logger.Info("Ok End Agent.Play " + index);
-
     }
   }
 }

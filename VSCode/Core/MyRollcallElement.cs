@@ -159,7 +159,8 @@ namespace TFModFortRiseLoaderAI
     {
       var dynData = DynamicData.For(self);
       int playerIndex = (int)dynData.Get("playerIndex");
-
+      if (dynData.Get("input") == null)
+        return 0;
       var input = DynamicData.For(dynData.Get("input"));
       if (input == null)
         return 0;

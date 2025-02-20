@@ -10,7 +10,8 @@ namespace TFModFortRiseLoaderAI
   public class TFModFortRiseLoaderAIModule : FortModule
   {
     public static TFModFortRiseLoaderAIModule Instance;
-
+    public static bool EightPlayerMod;
+    public static bool canAddAgent = false;
     public static Dictionary<int, String> currentPlayerType = new Dictionary<int, String>(8);
     public static Dictionary<int, PlayerInput> savedHumanPlayerInput = new Dictionary<int, PlayerInput>(8);
     public static bool isHumanPlayerTypeSaved = false;
@@ -25,7 +26,7 @@ namespace TFModFortRiseLoaderAI
     public TFModFortRiseLoaderAIModule()
     {
       Instance = this;
-      Logger.Init("LoaderAILOG");
+      //Logger.Init("LoaderAILOG");
     }
 
     public override void LoadContent()
@@ -38,7 +39,9 @@ namespace TFModFortRiseLoaderAI
       MyTFGame.Load();
       MyRollcallElement.Load();
       MyLevel.Load();
+      MyVersusRoundResults.Load();
       typeof(ModExports).ModInterop();
+      EightPlayerMod = IsModExists("WiderSetMod");
     }
 
     public override void Unload()
@@ -46,7 +49,7 @@ namespace TFModFortRiseLoaderAI
       MyTFGame.Unload();
       MyRollcallElement.Unload();
       MyLevel.Unload();
-
+      MyVersusRoundResults.Unload();
     }
 
     public static bool IsAgentPlaying(int playerIndex, Level level)
@@ -68,6 +71,7 @@ namespace TFModFortRiseLoaderAI
     {
       String type = GetPlayerTypePlaying(playerIndex);
       if (type == "HUMAN") type = "P";
+      if (type == "NONE") type = "P";
       return type + " " + (playerIndex + 1); // space " " important to detect in MyVersusRoundResults.Update_patch()
     }
 
@@ -180,6 +184,13 @@ namespace TFModFortRiseLoaderAI
 
       for (var i = 0; i < agents.Length; i++) {
         TFModFortRiseLoaderAIModule.nbPlayerType[i]++;
+
+        if (null != TFGame.PlayerInputs[i])
+        {
+          continue;
+        }
+        TFGame.PlayerInputs[i] = agents[i].getInput();
+        TFModFortRiseLoaderAIModule.currentPlayerType[i] = newNameType;
       }
       return true;
     }
@@ -201,6 +212,11 @@ namespace TFModFortRiseLoaderAI
     public static bool IsAgentPlaying(int playerIndex, Level level)
     {
       return TFModFortRiseLoaderAIModule.IsAgentPlaying(playerIndex, level);
+    }
+
+    public static bool CanAddAgent()
+    {
+      return TFModFortRiseLoaderAIModule.canAddAgent;
     }
   }
 }

@@ -34,3 +34,8 @@ Select an AI with the nu pad 1 to 4 ans deselect with F1 to F4
 |Jump / select AI  | NumPad1 | NumPad2 | NumPad3 | NumPad4 | NumPad5 | NumPad6 | NumPad7 | NumPad8 |
 |Shoot / deselect AI | F1 | F2 | F3 | F4 | F4 | F5 | F6 | F7 | F8 |
 |Dodge  | F13  | F14  | F15  | F16  | F17  | F18  | F19  | F20  |
+
+![image](https://github.com/user-attachments/assets/a1c194c1-9603-4547-98f4-e5057d2b8a7b)
+
+![image](https://github.com/user-attachments/assets/65b62c39-e25d-4dca-9cc6-230b5013af54)
+

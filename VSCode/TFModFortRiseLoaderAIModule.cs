@@ -39,8 +39,11 @@ namespace TFModFortRiseLoaderAI
       MyTFGame.Load();
       MyRollcallElement.Load();
       MyLevel.Load();
+      MyPlayerIndicator.Load();
       MyVersusRoundResults.Load();
+
       typeof(ModExports).ModInterop();
+
       EightPlayerMod = IsModExists("WiderSetMod");
     }
 
@@ -49,6 +52,8 @@ namespace TFModFortRiseLoaderAI
       MyTFGame.Unload();
       MyRollcallElement.Unload();
       MyLevel.Unload();
+      MyPlayerIndicator.Unload();
+
       MyVersusRoundResults.Unload();
     }
 
@@ -77,6 +82,8 @@ namespace TFModFortRiseLoaderAI
 
     public static PlayerInput GetCurrentPlayerInput(int playerIndex)
     {
+      if (!currentPlayerType.ContainsKey(playerIndex)) return null;
+
       if (currentPlayerType[playerIndex] == "HUMAN")
       {
         return savedHumanPlayerInput[playerIndex];

@@ -1,5 +1,8 @@
 This is a Loader for fortrise Ai Mod.
 
+* WiderSetMod supported
+
+
 This Mod does nothing if no Mod AI is in the Mods Directory.
 
 A skeleton project for an AI mod exists here : https://github.com/ebe1kenobi/tf-mod-fortrise-ai-example , can be used but the player will only jump, you need to implement the AI.

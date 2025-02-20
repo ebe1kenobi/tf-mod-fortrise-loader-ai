@@ -33,12 +33,12 @@ namespace TFModFortRiseLoaderAI
         int playerIndex = int.Parse(textText[1].ToString()) - 1;
         if (!TFModFortRiseLoaderAIModule.CurrentPlayerIs("HUMAN", playerIndex))
         {
-          dynData.Set("text", TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex) + " " + (playerIndex + 1));
+          dynData.Set("text", TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex));
           text.Position.X -= 30;
         }
         else if (text.Position.X != 30)
         {
-          dynData.Set("text", TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex) + " " + (playerIndex + 1));
+          dynData.Set("text", TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex));
           text.Position.X -= 30;
         }
       }

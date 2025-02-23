@@ -26,7 +26,7 @@ namespace TFModFortRiseLoaderAI
     public TFModFortRiseLoaderAIModule()
     {
       Instance = this;
-      //Logger.Init("LoaderAILOG");
+      Logger.Init("LoaderAILOG");
     }
 
     public override void LoadContent()
@@ -154,10 +154,23 @@ namespace TFModFortRiseLoaderAI
     {
       for (var i = 0; i < TFGame.Players.Length; i++)
       {
+        //Logger.Info("SetAgentLevel " + i);
         if (!TFGame.Players[i]) continue;
+        //Logger.Info("SetAgentLevel1 " + i);
         if (null == TFGame.PlayerInputs[i]) continue;
+        //Logger.Info("SetAgentLevel2 " + i);
         if (!InputName.Equals(TFGame.PlayerInputs[i].GetType().ToString())) continue;
+        //Logger.Info("SetAgentLevel3 " + i);
+        //Logger.Info("currentPlayerType[i] " + currentPlayerType[i]);
+        //Logger.Info("listAgentByType " + listAgentByType.Keys.ToString());
+        // Not noamel todo, InputName.Equals should continue when human (check with training on)
+        if (TFModFortRiseLoaderAIModule.currentPlayerType[i] == "NONE" || TFModFortRiseLoaderAIModule.currentPlayerType[i] == "HUMAN")
+        {
+          continue;
+        }
+
         listAgentByType[currentPlayerType[i]][i].SetLevel(level);
+        //Logger.Info("SetAgentLevel4 " + i);
       }
     }
 
@@ -167,9 +180,16 @@ namespace TFModFortRiseLoaderAI
 
       for (int i = 0; i < TFGame.Players.Length; i++)
       {
+
         if (!(InputName.Equals(TFGame.PlayerInputs[i].GetType().ToString())
             && TFModFortRiseLoaderAIModule.IsAgentPlaying(i, level)))
           continue;
+
+        // Not noamel todo, InputName.Equals should continue when human (check with training on)
+        if (TFModFortRiseLoaderAIModule.currentPlayerType[i] == "NONE" || TFModFortRiseLoaderAIModule.currentPlayerType[i] == "HUMAN")
+        {
+          continue;
+        }
 
         listAgentByType[currentPlayerType[i]][i].Play();
       }
@@ -179,7 +199,7 @@ namespace TFModFortRiseLoaderAI
   [ModExportName("com.fortrise.TFModFortRiseLoaderAI")]
   public static class ModExports
   {
-    public static bool addAgent(String type, Agent[] agents) {
+    public static bool addAgent(String type, Agent[] agents, bool forceAgent) {
       String newNameType = type;
       int index = 1;
       while (TFModFortRiseLoaderAIModule.listAgentByType.ContainsKey(newNameType)) {
@@ -191,10 +211,16 @@ namespace TFModFortRiseLoaderAI
 
       for (var i = 0; i < agents.Length; i++) {
         TFModFortRiseLoaderAIModule.nbPlayerType[i]++;
-
-        if (null != TFGame.PlayerInputs[i])
-        {
-          continue;
+        //Logger.Info("addAgent " + i + " " + TFGame.PlayerInputs[i].GetType().ToString() + " " + TFModFortRiseLoaderAIModule.currentPlayerType[i]);
+        if (!forceAgent) {
+          if (null != TFGame.PlayerInputs[i])
+          {
+            continue;
+          }
+          if (TFModFortRiseLoaderAIModule.currentPlayerType[i] != "NONE")
+          {
+            continue;
+          }
         }
         TFGame.PlayerInputs[i] = agents[i].getInput();
         TFModFortRiseLoaderAIModule.currentPlayerType[i] = newNameType;

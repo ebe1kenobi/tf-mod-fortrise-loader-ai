@@ -26,11 +26,13 @@ namespace TFModFortRiseLoaderAI
           {
             TFModFortRiseLoaderAIModule.currentPlayerType[i] = "NONE";
             TFModFortRiseLoaderAIModule.nbPlayerType[i] = 0;
+            //Logger.Info("Update_patch TFModFortRiseLoaderAIModule.currentPlayerType[" + i + "] = NONE");
             continue;
           }
 
           TFModFortRiseLoaderAIModule.nbPlayerType[i] = 1;
           TFModFortRiseLoaderAIModule.currentPlayerType[i] = "HUMAN";
+          //Logger.Info("Update_patch TFModFortRiseLoaderAIModule.currentPlayerType[" + i + "] =  HUMAN");
           TFModFortRiseLoaderAIModule.savedHumanPlayerInput[i] = TFGame.PlayerInputs[i];
         }
         TFModFortRiseLoaderAIModule.isHumanPlayerTypeSaved = true;

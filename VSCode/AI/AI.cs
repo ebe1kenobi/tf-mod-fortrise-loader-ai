@@ -24,7 +24,7 @@ namespace TFModFortRiseLoaderAI
         agents[i] = new AIAgent(i, "AI", AgentInputs[i]);
         //Logger.Info("Agent " + i + " Created");
       }
-      ModExports.addAgent("AI", agents);
+      ModExports.addAgent("AI", agents, false);
       isAgentReady = true;
     }
   }

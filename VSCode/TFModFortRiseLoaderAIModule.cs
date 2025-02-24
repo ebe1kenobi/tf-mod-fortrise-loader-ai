@@ -180,10 +180,15 @@ namespace TFModFortRiseLoaderAI
 
       for (int i = 0; i < TFGame.Players.Length; i++)
       {
+        if (!TFGame.Players[i]) continue;
+
+        if (TFGame.PlayerInputs[i] == null) continue;
+
 
         if (!(InputName.Equals(TFGame.PlayerInputs[i].GetType().ToString())
             && TFModFortRiseLoaderAIModule.IsAgentPlaying(i, level)))
           continue;
+
 
         // Not noamel todo, InputName.Equals should continue when human (check with training on)
         if (TFModFortRiseLoaderAIModule.currentPlayerType[i] == "NONE" || TFModFortRiseLoaderAIModule.currentPlayerType[i] == "HUMAN")
@@ -210,6 +215,7 @@ namespace TFModFortRiseLoaderAI
       TFModFortRiseLoaderAIModule.listAgentType.Add(TFModFortRiseLoaderAIModule.listAgentType.Count, newNameType);
 
       for (var i = 0; i < agents.Length; i++) {
+
         TFModFortRiseLoaderAIModule.nbPlayerType[i]++;
         //Logger.Info("addAgent " + i + " " + TFGame.PlayerInputs[i].GetType().ToString() + " " + TFModFortRiseLoaderAIModule.currentPlayerType[i]);
         if (!forceAgent) {
@@ -222,8 +228,20 @@ namespace TFModFortRiseLoaderAI
             continue;
           }
         }
-        TFGame.PlayerInputs[i] = agents[i].getInput();
-        TFModFortRiseLoaderAIModule.currentPlayerType[i] = newNameType;
+
+
+        if (!agents[i].isPlaying())
+        {
+          //TFGame.Players[i] = false;
+          TFGame.PlayerInputs[i] = null;
+          TFModFortRiseLoaderAIModule.currentPlayerType[i] = "NONE";
+        }
+        else
+        {
+          //TFGame.Players[i] = true;
+          TFGame.PlayerInputs[i] = agents[i].getInput();
+          TFModFortRiseLoaderAIModule.currentPlayerType[i] = newNameType;
+        }
       }
       return true;
     }

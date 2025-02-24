@@ -12,6 +12,7 @@ namespace TFModFortRiseLoaderAI
         protected Random random;
         protected string type;
         protected List<InputState> shoot = new List<InputState>();
+        protected bool play = true;
 
         public Agent(int index, string type, PlayerInput input)
         {
@@ -19,6 +20,15 @@ namespace TFModFortRiseLoaderAI
             this.input = (Input)input;
             this.type = type;
             random = new Random(index * 666);
+        }
+        public bool isPlaying()
+        {
+          return play;
+        }
+
+        public void setPlaying(bool play)
+        {
+          this.play = play;
         }
 
         public virtual void SetLevel(Level level)

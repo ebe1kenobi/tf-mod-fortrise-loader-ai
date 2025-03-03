@@ -8,7 +8,7 @@ namespace TFModFortRiseLoaderAI
   {
     public AIAgent(int index, String type, PlayerInput input) : base(index, type, input) {
     }
-    protected override void Move()
+    public override void Move()
     {
       this.input.inputState = new InputState();
       this.input.inputState.AimAxis.X = 0;

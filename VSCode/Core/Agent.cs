@@ -60,6 +60,6 @@ namespace TFModFortRiseLoaderAI
           Move();
         }
 
-        protected abstract void Move();
+        public abstract void Move();
   }
 }

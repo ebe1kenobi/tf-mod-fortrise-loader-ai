@@ -23,11 +23,11 @@ namespace TFModFortRiseLoaderAI
 
     public static void Update_patch(On.TowerFall.Level.orig_Update orig, global::TowerFall.Level self)
     {
+      orig(self);
       if (!(self.Ending))
       {
         TFModFortRiseLoaderAIModule.AgentUpdate(self);
       }
-      orig(self);
     }
   }
 }

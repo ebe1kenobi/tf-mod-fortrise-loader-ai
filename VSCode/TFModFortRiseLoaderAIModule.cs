@@ -59,7 +59,8 @@ namespace TFModFortRiseLoaderAI
 
     public static bool IsAgentPlaying(int playerIndex, Level level)
     {
-      return level.GetPlayer(playerIndex) != null;
+      return level.GetPlayer(playerIndex) != null; 
+      //return true;// level.GetPlayer(playerIndex) != null;  todo training for death
     }
 
     public static bool CurrentPlayerIs(String type, int playerIndex)

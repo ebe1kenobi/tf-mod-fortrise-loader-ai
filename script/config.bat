@@ -2,6 +2,7 @@ set REPO_DRIVE=D:
 set TOWERFALL_DRIVE=C:
 
 set DLL_MOD_FILE_NAME=TFModFortRiseLoaderAI.dll
+set PDB_MOD_FILE_NAME=TFModFortRiseLoaderAI.pdb
 set MODULE_DIR_NAME=tf-mod-fortrise-loader-ai
 
 set REPO_PATH=D:\__dev\code\tf-mod-fortrise-loader-ai\
@@ -13,6 +14,7 @@ set TOWERFALL_PATH="C:\Program Files (x86)\Steam\steamapps\common\TowerFall\"
 set TOWERFALL_MODS_PATH=%TOWERFALL_PATH%Mods\
 set TOWERFALL_THIS_MODULE_PATH=%TOWERFALL_MODS_PATH%%MODULE_DIR_NAME%\
 set TOWERFALL_EXE_PATH=%TOWERFALL_PATH%%EXE_TOWERFALL_NAME%
+set EXECUTABLE=%TOWERFALL_PATH%TowerFall.exe
 set PYRGOS_EXE_PATH="C:\Program Files\Pyrgos\Pyrgos.exe"
 
 

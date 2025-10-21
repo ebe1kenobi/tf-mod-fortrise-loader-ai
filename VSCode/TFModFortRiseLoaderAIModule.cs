@@ -3,6 +3,7 @@ using FortRise;
 using TowerFall;
 using MonoMod.ModInterop;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace TFModFortRiseLoaderAI
 {
@@ -26,7 +27,7 @@ namespace TFModFortRiseLoaderAI
     public TFModFortRiseLoaderAIModule()
     {
       Instance = this;
-      //Logger.Init("LoaderAILOG");
+      //Logger.Init("LoaderAI");
     }
 
     public override void LoadContent()
@@ -39,11 +40,12 @@ namespace TFModFortRiseLoaderAI
       MyTFGame.Load();
       MyRollcallElement.Load();
       MyLevel.Load();
-      MyPlayerIndicator.Load();
-      MyVersusRoundResults.Load();
+      //MyPlayerIndicator.Load();
+      //MyVersusRoundResults.Load();
 
       typeof(ModExports).ModInterop();
-
+      typeof(CustomNameImport).ModInterop();
+      
       EightPlayerMod = IsModExists("WiderSetMod");
     }
 
@@ -52,9 +54,9 @@ namespace TFModFortRiseLoaderAI
       MyTFGame.Unload();
       MyRollcallElement.Unload();
       MyLevel.Unload();
-      MyPlayerIndicator.Unload();
+      //MyPlayerIndicator.Unload();
 
-      MyVersusRoundResults.Unload();
+      //MyVersusRoundResults.Unload();
     }
 
     public static bool IsAgentPlaying(int playerIndex, Level level)
@@ -77,6 +79,14 @@ namespace TFModFortRiseLoaderAI
       String type = GetPlayerTypePlaying(playerIndex);
       if (type == "HUMAN") type = "P";
       if (type == "NONE") type = "P";
+      return type + " " + (playerIndex + 1); // space " " important to detect in MyVersusRoundResults.Update_patch()
+    }
+
+    public static string GetAIPlayerName(int playerIndex)
+    {
+      String type = GetPlayerTypePlaying(playerIndex);
+      if (type == "HUMAN") type = "HUMAN";
+      if (type == "NONE") type = "NONE";
       return type + " " + (playerIndex + 1); // space " " important to detect in MyVersusRoundResults.Update_patch()
     }
 
@@ -213,7 +223,8 @@ namespace TFModFortRiseLoaderAI
 
     public static String GetPlayerName(int playerIndex)
     {
-      return TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
+      //return TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
+      return CustomNameImport.GetPlayerName(playerIndex);
     }
 
     public static bool IsAgentPlaying(int playerIndex, Level level)

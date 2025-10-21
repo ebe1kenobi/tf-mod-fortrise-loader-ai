@@ -4,13 +4,14 @@ using MonoMod.Utils;
 using System;
 using System.Collections.Generic;
 using TowerFall;
-
+using MonoMod.ModInterop;
 
 namespace TFModFortRiseLoaderAI
 {
   public class MyRollcallElement
   {
-    public static Dictionary<int, Text> playerName = new Dictionary<int, Text>(8);
+    //public static Dictionary<int, Text> playerName = new Dictionary<int, Text>(8);
+    public static Dictionary<int, String> humanPlayerName = new Dictionary<int, String>(8);
     public static Dictionary<int, Image> upArrow = new Dictionary<int, Image>(8);
     public static Dictionary<int, Image> downArrow = new Dictionary<int, Image>(8);
 
@@ -36,6 +37,7 @@ namespace TFModFortRiseLoaderAI
 
     public static void ctor_patch(On.TowerFall.RollcallElement.orig_ctor orig, global::TowerFall.RollcallElement self, int playerIndex)
     {
+      typeof(EigthPlayerImport).ModInterop();
       orig(self, playerIndex);
       var dynData = DynamicData.For(self);
 
@@ -44,51 +46,50 @@ namespace TFModFortRiseLoaderAI
         TFGame.PlayerInputs[playerIndex] = TFModFortRiseLoaderAIModule.savedHumanPlayerInput[playerIndex];
         dynData.Set("input", TFGame.PlayerInputs[playerIndex]);
       }
+      if (!TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex).Equals("HUMAN"))
+      {
+        CustomNameImport.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+      }
+      if (TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex).Equals("HUMAN"))
+      {
+        humanPlayerName[playerIndex] = CustomNameImport.GetPlayerName(playerIndex);
+      }
+
 
       Color color = Color.White;
-      Vector2 positionText;
-      if (TFGame.Players.Length > 4)
-      {
-        positionText = new Vector2(-10, -60);
-        positionText = new Vector2(0, 0);
-      }
-      else
-      {
-        positionText = new Vector2(10, -60);
-      }
       upArrow[playerIndex] = new Image(TFGame.Atlas["versus/playerIndicator"]);
       upArrow[playerIndex].FlipY = true;
       upArrow[playerIndex].Visible = true;
       upArrow[playerIndex].Color = color;
       self.Add((Component)upArrow[playerIndex]);
       upArrow[playerIndex].X = -10;
-      upArrow[playerIndex].Y = -70;
+      upArrow[playerIndex].Y = 0;
 
       downArrow[playerIndex] = new Image(TFGame.Atlas["versus/playerIndicator"]);
       downArrow[playerIndex].Visible = true;
       self.Add((Component)downArrow[playerIndex]);
       downArrow[playerIndex].X = -10;
-      downArrow[playerIndex].Y = -50;
+      downArrow[playerIndex].Y = 0;
       downArrow[playerIndex].Color = color;
 
-      String name = "-";
-      playerName[playerIndex] = new Text(TFGame.Font, name, positionText, color, Text.HorizontalAlign.Left, Text.VerticalAlign.Bottom);
+      //String name = "-";
+      //playerName[playerIndex] = new Text(TFGame.Font, name, positionText, color, Text.HorizontalAlign.Left, Text.VerticalAlign.Bottom);
 
-      self.Add((Component)playerName[playerIndex]);
+      //self.Add((Component)playerName[playerIndex]);
 
       dynData.Dispose();
     }
 
-    public static void SetPlayerName(int playerIndex)
-    {
-      var dynData = DynamicData.For(playerName[playerIndex]);
-      //String type = TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex);
-      //if (type == "HUMAN") type = "P";
-      //string name = type + (playerIndex + 1);
-      string name = TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
-      dynData.Set("text", name);
-      dynData.Dispose();
-    }
+    //public static void SetPlayerName(int playerIndex)
+    //{
+    //  var dynData = DynamicData.For(playerName[playerIndex]);
+    //  //String type = TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex);
+    //  //if (type == "HUMAN") type = "P";
+    //  //string name = type + (playerIndex + 1);
+    //  string name = TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
+    //  dynData.Set("text", name);
+    //  dynData.Dispose();
+    //}
 
     public static void SetAllPLayerInput()
     {
@@ -113,7 +114,7 @@ namespace TFModFortRiseLoaderAI
     {
       var dynData = DynamicData.For(self);
       int playerIndex = (int)dynData.Get("playerIndex");
-      SetPlayerName(playerIndex);
+      //SetPlayerName(playerIndex);
       if (((Image)dynData.Get("rightArrow")).Visible && TFModFortRiseLoaderAIModule.IsThereOtherPlayerType(playerIndex))
       {
         if ("NONE".Equals(TFModFortRiseLoaderAIModule.PreviousPlayerTypeExist(playerIndex)))
@@ -140,8 +141,17 @@ namespace TFModFortRiseLoaderAI
         float arrowSineValue = (float)arrowSine.Get("Value");
         float arrowWiggleValue = (float)arrowWiggle.Get("Value");
 
-        upArrow[playerIndex].Y = (float)(-68 + arrowSineValue * 3.0 + 6.0 * (rightArrowWiggle ? arrowWiggleValue : 0.0));
-        downArrow[playerIndex].Y = (float)(-50.0 - arrowSineValue * 3.0 + 6.0 * (!rightArrowWiggle ? arrowWiggleValue : 0.0));
+        int upY = -73;
+        int downY = -57;
+        if (TFGame.Players.Length > 4) {
+          if (EigthPlayerImport.LaunchedEightPlayer())
+          {
+            upY = -53;
+            downY = -37;
+          }
+        } 
+        upArrow[playerIndex].Y = (float)(upY + arrowSineValue * 3.0 + 5.0 * (rightArrowWiggle ? arrowWiggleValue : 0.0));
+        downArrow[playerIndex].Y = (float)(downY - arrowSineValue * 3.0 + 5.0 * (!rightArrowWiggle ? arrowWiggleValue : 0.0));
         arrowSine.Dispose();
         arrowWiggle.Dispose();
       }
@@ -171,17 +181,50 @@ namespace TFModFortRiseLoaderAI
       if (TFModFortRiseLoaderAIModule.IsThereOtherPlayerType(playerIndex))
       { //at leat 2 player type
         // Move up 
+
+
+        String previousPlayerType = TFModFortRiseLoaderAIModule.PreviousPlayerTypeExist(playerIndex);
+        String nextPlayerType = TFModFortRiseLoaderAIModule.NextPlayerTypeExist(playerIndex);
+
         if (MenuUp
-            && !"NONE".Equals(TFModFortRiseLoaderAIModule.PreviousPlayerTypeExist(playerIndex)))
+            && !"NONE".Equals(previousPlayerType))
         {
-          TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = TFModFortRiseLoaderAIModule.PreviousPlayerTypeExist(playerIndex);
+          if (TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex].Equals("HUMAN"))
+          {
+            humanPlayerName[playerIndex] = CustomNameImport.GetPlayerName(playerIndex);
+          }
+
+          TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = previousPlayerType;
+
+          if (!previousPlayerType.Equals("HUMAN"))
+          {
+            CustomNameImport.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+          }
+          if (previousPlayerType.Equals("HUMAN"))
+          {
+            CustomNameImport.SetPlayerName(playerIndex, humanPlayerName[playerIndex]);
+          }
         }
 
         // Move down
         if (MenuDown
-            && !"NONE".Equals(TFModFortRiseLoaderAIModule.NextPlayerTypeExist(playerIndex)))
+            && !"NONE".Equals(nextPlayerType))
         {
-          TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = TFModFortRiseLoaderAIModule.NextPlayerTypeExist(playerIndex);
+          if (TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex].Equals("HUMAN"))
+          {
+            humanPlayerName[playerIndex] = CustomNameImport.GetPlayerName(playerIndex);
+          }
+
+          TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = nextPlayerType;
+
+          if (!nextPlayerType.Equals("HUMAN"))
+          {
+            CustomNameImport.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+          }
+          if (nextPlayerType.Equals("HUMAN"))
+          {
+            CustomNameImport.SetPlayerName(playerIndex, humanPlayerName[playerIndex]);
+          }
         }
       }
       dynData.Dispose();

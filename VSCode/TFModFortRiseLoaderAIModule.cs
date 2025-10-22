@@ -2,6 +2,7 @@
 using FortRise;
 using TowerFall;
 using MonoMod.ModInterop;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace TFModFortRiseLoaderAI
@@ -25,6 +26,10 @@ namespace TFModFortRiseLoaderAI
 
     public TFModFortRiseLoaderAIModule()
     {
+      if (!Debugger.IsAttached)
+      {
+        //Debugger.Launch(); // Proposera d’attacher Visual Studio
+      }
       Instance = this;
       Logger.Init("LoaderAILOG");
     }
@@ -206,6 +211,30 @@ namespace TFModFortRiseLoaderAI
   public static class ModExports
   {
     public static bool addAgent(String type, Agent[] agents, bool forceAgent) {
+      Logger.Info("*****ModExports.addAgent count= " + agents.Length);
+        ///////////////////////////////////////////////////
+      //int total = 0;
+      //for (int i = 0; i < agents.Length; i++)
+      //{
+      //  Logger.Info($"agents key: {i} : " + (null == agents[i]));
+      //  if ((null == agents[i])) continue;
+      //  //cleanAgents[total] = agents[i];
+      //  total++;
+      //}
+      //Agent[] cleanAgents = new Agent[total];
+      //total = 0;
+      //for (int i = 0; i < agents.Length; i++)
+      //{
+      //  Logger.Info($"agents2 key: {i} : " + (null == agents[i]));
+      //  if ((null == agents[i])) continue;
+      //  cleanAgents[total] = agents[i];
+      //}
+      //agents = cleanAgents;
+      //for (int i = 0; i < agents.Length; i++)
+      //{
+      //  Logger.Info($"cleanAgents key: {i}");
+      //}
+      ///////////////////////////////////////////////////
       String newNameType = type;
       int index = 1;
       while (TFModFortRiseLoaderAIModule.listAgentByType.ContainsKey(newNameType)) {

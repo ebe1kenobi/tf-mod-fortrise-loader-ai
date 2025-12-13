@@ -1,0 +1,4 @@
+unstash
+$ git stash list
+stash@{0}: WIP on dev/training: f404ea1 save modif
+ modified:   VSCode/TFModFortRiseLoaderAIModule.cs

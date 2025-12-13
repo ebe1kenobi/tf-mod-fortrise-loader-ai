@@ -25,6 +25,11 @@ namespace TFModFortRiseLoaderAI
         {
             this.level = level;
             shoot.Clear();
+            //Reset();
+        }
+
+        public virtual void Reset() {
+
         }
 
         public virtual string getType()

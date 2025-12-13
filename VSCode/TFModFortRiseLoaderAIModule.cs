@@ -4,6 +4,7 @@ using TowerFall;
 using MonoMod.ModInterop;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace TFModFortRiseLoaderAI
 {
@@ -26,6 +27,10 @@ namespace TFModFortRiseLoaderAI
 
     public TFModFortRiseLoaderAIModule()
     {
+      if (!Debugger.IsAttached)
+      {
+        //Debugger.Launch(); // Proposera d’attacher Visual Studio
+      }
       Instance = this;
       //Logger.Init("LoaderAI");
     }

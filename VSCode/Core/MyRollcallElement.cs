@@ -1,45 +1,53 @@
-﻿using Microsoft.Xna.Framework;
-using Monocle;
-using MonoMod.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using TowerFall;
+using FortRise;
+using HarmonyLib;
+using Microsoft.Xna.Framework;
+using Monocle;
 using MonoMod.ModInterop;
+using MonoMod.Utils;
+using TowerFall;
 
 namespace TFModFortRiseLoaderAI
 {
-  public class MyRollcallElement
+  public class MyRollcallElement : IHookable
   {
-    //public static Dictionary<int, Text> playerName = new Dictionary<int, Text>(8);
     public static Dictionary<int, String> humanPlayerName = new Dictionary<int, String>(8);
     public static Dictionary<int, Image> upArrow = new Dictionary<int, Image>(8);
     public static Dictionary<int, Image> downArrow = new Dictionary<int, Image>(8);
 
-    internal static void Load()
+    public static void Load(IHarmony harmony)
     {
-      On.TowerFall.RollcallElement.ctor += ctor_patch;
-      On.TowerFall.RollcallElement.ForceStart += ForceStart_patch;
-      On.TowerFall.RollcallElement.StartVersus += StartVersus_patch;
-      On.TowerFall.RollcallElement.Render += Render_patch;
-      On.TowerFall.RollcallElement.NotJoinedUpdate += NotJoinedUpdate_patch;
+      harmony.Patch(
+          AccessTools.DeclaredConstructor(typeof(RollcallElement), [
+                                                                        typeof(int),
+                                                                    ]),
+          postfix: new HarmonyMethod(ctor_patch)
+      );
+
+      harmony.Patch(
+          AccessTools.DeclaredMethod(typeof(RollcallElement), nameof(RollcallElement.Render)),
+          prefix: new HarmonyMethod(Render_patch)
+      );
+      harmony.Patch(
+          AccessTools.DeclaredMethod(typeof(RollcallElement), "NotJoinedUpdate"),
+          prefix: new HarmonyMethod(NotJoinedUpdate_patch)
+      );
+      harmony.Patch(
+          AccessTools.DeclaredMethod(typeof(RollcallElement), "ForceStart"),
+          prefix: new HarmonyMethod(ForceStart_patch)
+      );
+      harmony.Patch(
+          AccessTools.DeclaredMethod(typeof(RollcallElement), "StartVersus"),
+          prefix: new HarmonyMethod(StartVersus_patch)
+      );
     }
 
-    internal static void Unload()
-    {
-      On.TowerFall.RollcallElement.ctor -= ctor_patch;
-      On.TowerFall.RollcallElement.ForceStart -= ForceStart_patch;
-      On.TowerFall.RollcallElement.StartVersus -= StartVersus_patch;
-      On.TowerFall.RollcallElement.Render -= Render_patch;
-      On.TowerFall.RollcallElement.NotJoinedUpdate -= NotJoinedUpdate_patch;
-    }
-
-    public MyRollcallElement() { }
-
-    public static void ctor_patch(On.TowerFall.RollcallElement.orig_ctor orig, global::TowerFall.RollcallElement self, int playerIndex)
+    public static void ctor_patch(RollcallElement __instance, int playerIndex)
     {
       typeof(EigthPlayerImport).ModInterop();
-      orig(self, playerIndex);
-      var dynData = DynamicData.For(self);
+      typeof(CustomNameImport).ModInterop();
+      var dynData = DynamicData.For(__instance);
 
       if (TFModFortRiseLoaderAIModule.savedHumanPlayerInput.ContainsKey(playerIndex))
       {
@@ -49,6 +57,9 @@ namespace TFModFortRiseLoaderAI
       if (!TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex).Equals("HUMAN"))
       {
         CustomNameImport.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+      }
+      if (CustomNameImport.GetPlayerName == null) {
+        throw new Exception("CustomNameImport.GetPlayerName is null");
       }
       if (TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex).Equals("HUMAN"))
       {
@@ -61,35 +72,19 @@ namespace TFModFortRiseLoaderAI
       upArrow[playerIndex].FlipY = true;
       upArrow[playerIndex].Visible = true;
       upArrow[playerIndex].Color = color;
-      self.Add((Component)upArrow[playerIndex]);
+      __instance.Add((Component)upArrow[playerIndex]);
       upArrow[playerIndex].X = -10;
       upArrow[playerIndex].Y = 0;
 
       downArrow[playerIndex] = new Image(TFGame.Atlas["versus/playerIndicator"]);
       downArrow[playerIndex].Visible = true;
-      self.Add((Component)downArrow[playerIndex]);
+      __instance.Add((Component)downArrow[playerIndex]);
       downArrow[playerIndex].X = -10;
       downArrow[playerIndex].Y = 0;
       downArrow[playerIndex].Color = color;
 
-      //String name = "-";
-      //playerName[playerIndex] = new Text(TFGame.Font, name, positionText, color, Text.HorizontalAlign.Left, Text.VerticalAlign.Bottom);
-
-      //self.Add((Component)playerName[playerIndex]);
-
       dynData.Dispose();
     }
-
-    //public static void SetPlayerName(int playerIndex)
-    //{
-    //  var dynData = DynamicData.For(playerName[playerIndex]);
-    //  //String type = TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex);
-    //  //if (type == "HUMAN") type = "P";
-    //  //string name = type + (playerIndex + 1);
-    //  string name = TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
-    //  dynData.Set("text", name);
-    //  dynData.Dispose();
-    //}
 
     public static void SetAllPLayerInput()
     {
@@ -98,21 +93,19 @@ namespace TFModFortRiseLoaderAI
         TFGame.PlayerInputs[i] = TFModFortRiseLoaderAIModule.GetCurrentPlayerInput(i);
       }
     }
-    public static void ForceStart_patch(On.TowerFall.RollcallElement.orig_ForceStart orig, global::TowerFall.RollcallElement self)
+    public static void ForceStart_patch(Level __instance)
     {
       SetAllPLayerInput();
-      orig(self);
     }
-    public static void StartVersus_patch(On.TowerFall.RollcallElement.orig_StartVersus orig, global::TowerFall.RollcallElement self)
+    public static void StartVersus_patch(Level __instance)
     {
       SetAllPLayerInput();
-      orig(self);
     }
 
 
-    public static void Render_patch(On.TowerFall.RollcallElement.orig_Render orig, global::TowerFall.RollcallElement self)
+    public static void Render_patch(Level __instance)
     {
-      var dynData = DynamicData.For(self);
+      var dynData = DynamicData.For(__instance);
       int playerIndex = (int)dynData.Get("playerIndex");
       //SetPlayerName(playerIndex);
       if (((Image)dynData.Get("rightArrow")).Visible && TFModFortRiseLoaderAIModule.IsThereOtherPlayerType(playerIndex))
@@ -161,19 +154,18 @@ namespace TFModFortRiseLoaderAI
         downArrow[playerIndex].Visible = false;
       }
 
-      orig(self);
       dynData.Dispose();
 
     }
-    public static int NotJoinedUpdate_patch(On.TowerFall.RollcallElement.orig_NotJoinedUpdate orig, global::TowerFall.RollcallElement self)
+    public static void NotJoinedUpdate_patch(Level __instance)
     {
-      var dynData = DynamicData.For(self);
+      var dynData = DynamicData.For(__instance);
       int playerIndex = (int)dynData.Get("playerIndex");
       if (dynData.Get("input") == null)
-        return 0;
+        return;
       var input = DynamicData.For(dynData.Get("input"));
       if (input == null)
-        return 0;
+        return;
 
       var MenuUp = (bool)input.Get("MenuUp");
       var MenuDown = (bool)input.Get("MenuDown");
@@ -228,8 +220,6 @@ namespace TFModFortRiseLoaderAI
         }
       }
       dynData.Dispose();
-
-      return orig(self);
     }
   }
 }

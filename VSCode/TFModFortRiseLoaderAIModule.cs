@@ -1,17 +1,24 @@
 ﻿using System;
-using FortRise;
-using TowerFall;
-using MonoMod.ModInterop;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using FortRise;
+using Microsoft.Extensions.Logging;
+using Microsoft.Xna.Framework;
+using MonoMod.ModInterop;
+using TowerFall;
 
 namespace TFModFortRiseLoaderAI
 {
-  [Fort("com.ebe1.kenobi.tfmodfortriseloaderai", "TFModFortRiseLoaderAI")]
-  public class TFModFortRiseLoaderAIModule : FortModule
+  public class TFModFortRiseLoaderAIModule : Mod
   {
     public static TFModFortRiseLoaderAIModule Instance;
+
+    internal Type[] Hookables = [
+        typeof(MyLevel),
+        typeof(MyRollcallElement),
+        typeof(MyTFGame),
+    ];
+
     public static bool EightPlayerMod;
     public static bool canAddAgent = false;
     public static Dictionary<int, String> currentPlayerType = new Dictionary<int, String>(8);
@@ -22,47 +29,51 @@ namespace TFModFortRiseLoaderAI
     public static Dictionary<int, String> listAgentType = new Dictionary<int,String>();
     public const string InputName = "TFModFortRiseLoaderAI.Input";
 
-    public override Type SettingsType => typeof(TFModFortRiseLoaderAISettings);
-    public static TFModFortRiseLoaderAISettings Settings => (TFModFortRiseLoaderAISettings)Instance.InternalSettings;
+    //public override Type SettingsType => typeof(TFModFortRiseLoaderAISettings);
+    //public static TFModFortRiseLoaderAISettings Settings => (TFModFortRiseLoaderAISettings)Instance.InternalSettings;
 
-    public TFModFortRiseLoaderAIModule()
+    public TFModFortRiseLoaderAIModule(IModContent content, IModuleContext context, ILogger logger) : base(content, context, logger)
     {
       if (!Debugger.IsAttached)
       {
-        //Debugger.Launch(); // Proposera d’attacher Visual Studio
+        Debugger.Launch(); // Proposera d’attacher Visual Studio
       }
       Instance = this;
       //Logger.Init("LoaderAI");
+      foreach (var hookable in Hookables)
+      {
+        hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);
+      }
+
+      //typeof(ModExports).ModInterop();
+      //typeof(CustomNameImport).ModInterop();
+
+      //EightPlayerMod = IsModExists("WiderSetMod");
     }
 
-    public override void LoadContent()
-    {
+    //public override void Load()
+    //{
+      //  //MyTFGame.Load();
+      //  //MyRollcallElement.Load();
+      //  //MyLevel.Load();
+      //  //MyPlayerIndicator.Load();
+      //  //MyVersusRoundResults.Load();
 
-    }
+      //  //typeof(ModExports).ModInterop();
+      //  //typeof(CustomNameImport).ModInterop();
 
-    public override void Load()
-    {
-      MyTFGame.Load();
-      MyRollcallElement.Load();
-      MyLevel.Load();
-      //MyPlayerIndicator.Load();
-      //MyVersusRoundResults.Load();
+      //  //EightPlayerMod = IsModExists("WiderSetMod");
+    //}
 
-      typeof(ModExports).ModInterop();
-      typeof(CustomNameImport).ModInterop();
-      
-      EightPlayerMod = IsModExists("WiderSetMod");
-    }
+    //public override void Unload()
+    //{
+    //  MyTFGame.Unload();
+    //  MyRollcallElement.Unload();
+    //  MyLevel.Unload();
+    //  //MyPlayerIndicator.Unload();
 
-    public override void Unload()
-    {
-      MyTFGame.Unload();
-      MyRollcallElement.Unload();
-      MyLevel.Unload();
-      //MyPlayerIndicator.Unload();
-
-      //MyVersusRoundResults.Unload();
-    }
+    //  //MyVersusRoundResults.Unload();
+    //}
 
     public static bool IsAgentPlaying(int playerIndex, Level level)
     {

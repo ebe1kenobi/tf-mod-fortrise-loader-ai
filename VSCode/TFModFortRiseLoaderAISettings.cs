@@ -1,8 +1,8 @@
-﻿using FortRise;
+﻿//using FortRise;
 
-namespace TFModFortRiseLoaderAI
-{
-  public class TFModFortRiseLoaderAISettings: ModuleSettings
-  {
-  }
-}
+//namespace TFModFortRiseLoaderAI
+//{
+//  public class TFModFortRiseLoaderAISettings: ModuleSettings
+//  {
+//  }
+//}

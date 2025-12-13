@@ -1,33 +1,39 @@
 ﻿using System.Xml;
+using FortRise;
+using HarmonyLib;
+using TowerFall;
 namespace TFModFortRiseLoaderAI
 {
-  public class MyLevel
+  public class MyLevel : IHookable
   {
-    internal static void Load()
+    public static void Load(IHarmony harmony)
     {
-      On.TowerFall.Level.Update += Update_patch;
-      On.TowerFall.Level.ctor += ctor_patch;
+      harmony.Patch(
+          AccessTools.DeclaredConstructor(typeof(Level), [
+                                                                        typeof(Session),
+                                                                        typeof(XmlElement),
+                                                                    ]),
+          prefix: new HarmonyMethod(ctor_patch)
+      );
+
+      harmony.Patch(
+          AccessTools.DeclaredMethod(typeof(Level), nameof(Level.Update)),
+          prefix: new HarmonyMethod(Update_patch)
+      );
     }
 
-    internal static void Unload()
+
+    public static void ctor_patch(Level __instance, Session session, XmlElement xml)
     {
-      On.TowerFall.Level.Update -= Update_patch;
-      On.TowerFall.Level.ctor -= ctor_patch;
+      TFModFortRiseLoaderAIModule.SetAgentLevel(__instance); 
     }
 
-    public static void ctor_patch(On.TowerFall.Level.orig_ctor orig, global::TowerFall.Level self, global::TowerFall.Session session, XmlElement xml)
+    public static void Update_patch(Level __instance)
     {
-      TFModFortRiseLoaderAIModule.SetAgentLevel(self); 
-      orig(self, session, xml);
-    }
-
-    public static void Update_patch(On.TowerFall.Level.orig_Update orig, global::TowerFall.Level self)
-    {
-      if (!(self.Ending))
+      if (!(__instance.Ending))
       {
-        TFModFortRiseLoaderAIModule.AgentUpdate(self);
+        TFModFortRiseLoaderAIModule.AgentUpdate(__instance);
       }
-      orig(self);
     }
   }
 }

@@ -23,7 +23,7 @@ namespace TFModFortRiseLoaderAI
         AgentInputs[i] = new Input(i);
         agents[i] = new AIAgent(i, "AI", AgentInputs[i]);
       }
-      ModExports.addAgent("AI", agents);
+      TFModFortRiseLoaderAIModule.Instance.LoaderAIModApi.addAgent("AI", agents);
       isAgentReady = true;
     }
   }

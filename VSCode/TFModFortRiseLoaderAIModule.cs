@@ -52,7 +52,7 @@ namespace TFModFortRiseLoaderAI
         hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);
       }
 
-      CustomNameModApi = context.Interop.GetApi<ICustomNameModApi>("TFModFortRiseCustomName");
+      CustomNameModApi = context.Interop.GetApi<ICustomNameModApi>("CustomName");
       LoaderAIModApi = new ApiImplementation();
       //typeof(ModExports).ModInterop();
       //typeof(CustomNameImport).ModInterop();
@@ -129,7 +129,7 @@ namespace TFModFortRiseLoaderAI
         return savedHumanPlayerInput[playerIndex];
       }
       else
-      {
+      {//todo bug when no ai mod (NONE)
         return listAgentByType[currentPlayerType[playerIndex]][playerIndex].getInput();
       }
     }

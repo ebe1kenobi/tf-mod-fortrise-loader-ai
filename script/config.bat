@@ -4,6 +4,8 @@ set TOWERFALL_DRIVE=C:
 set BUILD_NAME=TFModFortRiseLoaderAI
 set DLL_MOD_FILE_NAME=TFModFortRiseLoaderAI.dll
 set PDB_MOD_FILE_NAME=TFModFortRiseLoaderAI.pdb
+@REM set DLL_MOD_ABSTRACTION_LOADERAI=TFModFortRiseAI.Abstractions.dll
+
 set MODULE_DIR_NAME=tf-mod-fortrise-loader-ai
 
 set REPO_PATH=D:\__dev\code\tf-mod-fortrise-loader-ai\

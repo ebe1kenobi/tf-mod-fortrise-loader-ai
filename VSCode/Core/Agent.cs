@@ -53,7 +53,7 @@ namespace TFModFortRiseLoaderAI
           if (level.Ending) return;
 
           Move();
-        }
+    }
 
         protected abstract void Move();
   }

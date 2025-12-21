@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using MonoMod.ModInterop;
 using TowerFall;
 using TFModFortRiseCustomName;
+using System.IO;
+using System.Reflection;
 
 namespace TFModFortRiseLoaderAI
 {
@@ -35,10 +37,6 @@ namespace TFModFortRiseLoaderAI
     public static Dictionary<int, String> listAgentType = new Dictionary<int,String>();
     public const string InputName = "TFModFortRiseLoaderAI.Input";
 
-    //public override Type SettingsType => typeof(TFModFortRiseLoaderAISettings);
-    //public static TFModFortRiseLoaderAISettings Settings => (TFModFortRiseLoaderAISettings)Instance.InternalSettings;
-    //public static TFModFortRiseCustomNameSettings Settings => Instance.GetSettings<TFModFortRiseCustomNameSettings>()!;
-
     public TFModFortRiseLoaderAIModule(IModContent content, IModuleContext context, ILogger logger) : base(content, context, logger)
     {
       if (!Debugger.IsAttached)
@@ -46,11 +44,16 @@ namespace TFModFortRiseLoaderAI
         //Debugger.Launch(); // Proposera d’attacher Visual Studio
       }
       Instance = this;
-      //Logger.Init("LoaderAI");
+      TFModFortRiseLoaderAI.Logger.Init("LoaderAI");
       foreach (var hookable in Hookables)
       {
         hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);
       }
+
+      //var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
+      var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
+
+      Assembly.LoadFrom(abstractionsPath);
 
       CustomNameModApi = context.Interop.GetApi<ICustomNameModApi>("CustomName");
       LoaderAIModApi = new ApiImplementation();
@@ -64,30 +67,6 @@ namespace TFModFortRiseLoaderAI
     {
       return new ApiImplementation();
     }
-
-    //public override void Load()
-    //{
-    //  //MyTFGame.Load();
-    //  //MyRollcallElement.Load();
-    //  //MyLevel.Load();
-    //  //MyPlayerIndicator.Load();
-    //  //MyVersusRoundResults.Load();
-
-    //  //typeof(ModExports).ModInterop();
-    //  //typeof(CustomNameImport).ModInterop();
-
-    //  //EightPlayerMod = IsModExists("WiderSetMod");
-    //}
-
-    //public override void Unload()
-    //{
-    //  MyTFGame.Unload();
-    //  MyRollcallElement.Unload();
-    //  MyLevel.Unload();
-    //  //MyPlayerIndicator.Unload();
-
-    //  //MyVersusRoundResults.Unload();
-    //}
 
     public static bool IsAgentPlaying(int playerIndex, Level level)
     {
@@ -207,64 +186,20 @@ namespace TFModFortRiseLoaderAI
 
       for (int i = 0; i < TFGame.Players.Length; i++)
       {
+        //TFModFortRiseLoaderAI.Logger.Info($"{i} TFGame.PlayerInputs[i].GetType().ToString() = {TFGame.PlayerInputs[i].GetType().ToString()}");
+
         if (!(InputName.Equals(TFGame.PlayerInputs[i].GetType().ToString())
-            && TFModFortRiseLoaderAIModule.IsAgentPlaying(i, level)))
+            && TFModFortRiseLoaderAIModule.IsAgentPlaying(i, level))){
+          //TFModFortRiseLoaderAI.Logger.Info($"{i} not playing");
           continue;
 
+        }
+        //TFModFortRiseLoaderAI.Logger.Info($"{i} playing");
+        if (level.Paused) return;
+        if (level.Frozen) return;
+        if (level.Ending) return;
         listAgentByType[currentPlayerType[i]][i].Play();
       }
     }
   }
-
-  //[ModExportName("com.fortrise.TFModFortRiseLoaderAI")]
-  //public static class ModExports
-  //{
-  //  public static bool addAgent(String type, Agent[] agents) {
-  //    String newNameType = type;
-  //    int index = 1;
-  //    while (TFModFortRiseLoaderAIModule.listAgentByType.ContainsKey(newNameType)) {
-  //      newNameType = type + "-" + index;
-  //      index++;
-  //    }
-  //    TFModFortRiseLoaderAIModule.listAgentByType[newNameType] = agents;
-  //    TFModFortRiseLoaderAIModule.listAgentType.Add(TFModFortRiseLoaderAIModule.listAgentType.Count, newNameType);
-
-  //    for (var i = 0; i < agents.Length; i++) {
-  //      TFModFortRiseLoaderAIModule.nbPlayerType[i]++;
-
-  //      if (null != TFGame.PlayerInputs[i])
-  //      {
-  //        continue;
-  //      }
-  //      TFGame.PlayerInputs[i] = agents[i].getInput();
-  //      TFModFortRiseLoaderAIModule.currentPlayerType[i] = newNameType;
-  //    }
-  //    return true;
-  //  }
-
-  //  public static bool CurrentPlayerIs(String type, int playerIndex) {
-  //    return TFModFortRiseLoaderAIModule.CurrentPlayerIs(type, playerIndex);
-  //  }
-
-  //  public static String GetPlayerTypePlaying(int playerIndex)
-  //  {
-  //    return TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex);
-  //  }
-
-  //  public static String GetPlayerName(int playerIndex)
-  //  {
-  //    //return TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
-  //    return TFModFortRiseLoaderAIModule.Instance.CustomNameModApi.GetPlayerName(playerIndex);
-  //  }
-
-  //  public static bool IsAgentPlaying(int playerIndex, Level level)
-  //  {
-  //    return TFModFortRiseLoaderAIModule.IsAgentPlaying(playerIndex, level);
-  //  }
-
-  //  public static bool CanAddAgent()
-  //  {
-  //    return TFModFortRiseLoaderAIModule.canAddAgent;
-  //  }
-  //}
 }

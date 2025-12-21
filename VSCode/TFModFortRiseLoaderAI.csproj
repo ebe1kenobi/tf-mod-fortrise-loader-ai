@@ -10,5 +10,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+  <Reference Include="TFModFortRiseAI.Abstractions">
+    <HintPath>../../TFModFortRiseAI.Abstractions/bin/Debug/net10.0/TFModFortRiseAI.Abstractions.dll</HintPath>
+    <Private>true</Private>
+  </Reference>
+  </ItemGroup>
+
 </Project>
 

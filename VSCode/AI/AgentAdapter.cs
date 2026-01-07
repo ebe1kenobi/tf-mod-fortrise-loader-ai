@@ -38,21 +38,22 @@ namespace TFModFortRiseLoaderAI
     {
       //Logger.Info("AgentAdapter.Move call logic.Update");
       System.Collections.Generic.List<int> actions = logic.Update();
+      //Logger.Info("result Move AI : " + string.Join(", ", actions));
       input.inputState = new InputState
       {
         AimAxis = new Vector2(actions[IAgentLogic.X], actions[IAgentLogic.Y]),
         //ArrowsPressed = false,
-        DodgeCheck = actions[IAgentLogic.DODGE] == 1 ? true : false,
-        DodgePressed = actions[IAgentLogic.DODGE] == 1 ? false : true,
-        JumpCheck = actions[IAgentLogic.JUMP] == 1 ? true : false,
-        JumpPressed = actions[IAgentLogic.JUMP] == 1 ? false : true,
+        DodgeCheck = actions[IAgentLogic.DODGE_CHECK] == 1 ? true : false,
+        DodgePressed = actions[IAgentLogic.DODGE_PRESSED] == 1 ? true : false,
+        JumpCheck = actions[IAgentLogic.JUMP_CHECK] == 1 ? true : false,
+        JumpPressed = actions[IAgentLogic.JUMP_PRESSED] == 1 ? true : false,
         MoveX = actions[IAgentLogic.X],
         MoveY = actions[IAgentLogic.Y],
-        ShootCheck = actions[IAgentLogic.SHOOT] == 1 ? true : false,
-        ShootPressed = actions[IAgentLogic.SHOOT] == 1 ? false : true,
+        ShootCheck = actions[IAgentLogic.SHOOT_CHECK] == 1 ? true : false,
+        ShootPressed = actions[IAgentLogic.SHOOT_PRESSED] == 1 ? true : false,
 
-        AltShootCheck = actions[IAgentLogic.ALT_SHOOT] == 1 ? true : false,
-        AltShootPressed = actions[IAgentLogic.ALT_SHOOT] == 1 ? false : true,
+        AltShootCheck = actions[IAgentLogic.ALT_SHOOT_CHECK] == 1 ? true : false,
+        AltShootPressed = actions[IAgentLogic.ALT_SHOOT_PRESSED] == 1 ? true : false,
         ArrowsPressed = actions[IAgentLogic.ARROW_PRESSED] == 1 ? true : false,
       };
     }

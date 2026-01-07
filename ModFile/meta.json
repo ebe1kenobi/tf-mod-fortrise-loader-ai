@@ -1,13 +1,13 @@
 {
 	"name": "LoaderAI",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"author": "ebe1.kenobi",
 	"description": "Loader AI",
 	"dll": "TFModFortRiseLoaderAI.dll",
 	"dependencies": [
 		{
 			"name": "FortRise",
-			"version": "5.0.0"
+			"version": "5.2.3"
 		},
 		{
 			"name": "CustomName",

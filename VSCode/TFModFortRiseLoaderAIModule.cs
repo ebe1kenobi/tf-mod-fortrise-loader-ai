@@ -51,7 +51,8 @@ namespace TFModFortRiseLoaderAI
       }
 
       //var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
-      var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
+      //var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
+      var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\tf-mod-fortrise-loader-ai\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
 
       Assembly.LoadFrom(abstractionsPath);
 

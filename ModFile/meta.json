@@ -1,6 +1,6 @@
 {
 	"name": "Loader AI",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"required": "4.1.0",
 	"author": "ebe1.kenobi",
 	"description": "Loader AI",
@@ -8,7 +8,7 @@
 	"dependencies": [
 		{
 			"name": "Custom Name",
-			"version": "0.0.1"
+			"version": "0.0.4"
 		}
 	]
 }

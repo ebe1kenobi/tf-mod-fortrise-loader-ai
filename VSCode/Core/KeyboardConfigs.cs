@@ -31,7 +31,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.A };
       Configs[j].Left = new Keys[] { Keys.O };
       Configs[j].Right = new Keys[] { Keys.L };
-      Configs[j].Jump = new Keys[] { Keys.NumPad1 }; 
+      Configs[j].Jump = new Keys[] { Keys.NumPad1, Keys.D1 }; 
       Configs[j].Shoot = new Keys[] { Keys.F1 };
       Configs[j].Dodge = new Keys[] { Keys.F13 };
 
@@ -40,7 +40,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.Z };
       Configs[j].Left = new Keys[] { Keys.P };
       Configs[j].Right = new Keys[] { Keys.M };
-      Configs[j].Jump = new Keys[] { Keys.NumPad2 };
+      Configs[j].Jump = new Keys[] { Keys.NumPad2, Keys.D2 };
       Configs[j].Shoot = new Keys[] { Keys.F2 }; 
       Configs[j].Dodge = new Keys[] { Keys.F14 };
 
@@ -49,7 +49,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.E };
       Configs[j].Left = new Keys[] { Keys.W };
       Configs[j].Right = new Keys[] { Keys.X };
-      Configs[j].Jump = new Keys[] { Keys.NumPad3 };
+      Configs[j].Jump = new Keys[] { Keys.NumPad3, Keys.D3 };
       Configs[j].Shoot = new Keys[] { Keys.F3 };
       Configs[j].Dodge = new Keys[] { Keys.F15 };
 
@@ -58,7 +58,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.R };
       Configs[j].Left = new Keys[] { Keys.C };
       Configs[j].Right = new Keys[] { Keys.V };
-      Configs[j].Jump = new Keys[] { Keys.NumPad4 };
+      Configs[j].Jump = new Keys[] { Keys.NumPad4, Keys.D4 };
       Configs[j].Shoot = new Keys[] { Keys.F4 };
       Configs[j].Dodge = new Keys[] { Keys.F16 };
 
@@ -67,7 +67,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.T };
       Configs[j].Left = new Keys[] { Keys.B };
       Configs[j].Right = new Keys[] { Keys.N };
-      Configs[j].Jump = new Keys[] { Keys.NumPad5 }; 
+      Configs[j].Jump = new Keys[] { Keys.NumPad5, Keys.D5 }; 
       Configs[j].Shoot = new Keys[] { Keys.F5 };
       Configs[j].Dodge = new Keys[] { Keys.F17 };
 
@@ -76,7 +76,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.Y };
       Configs[j].Left = new Keys[] { Keys.F9 };
       Configs[j].Right = new Keys[] { Keys.F10 };
-      Configs[j].Jump = new Keys[] { Keys.NumPad6 };
+      Configs[j].Jump = new Keys[] { Keys.NumPad6, Keys.D6 };
       Configs[j].Shoot = new Keys[] { Keys.F6 };
       Configs[j].Dodge = new Keys[] { Keys.F18 };
 
@@ -85,7 +85,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.U};
       Configs[j].Left = new Keys[] { Keys.F11};
       Configs[j].Right = new Keys[] { Keys.F12};
-      Configs[j].Jump = new Keys[] { Keys.NumPad7 };
+      Configs[j].Jump = new Keys[] { Keys.NumPad7, Keys.D7 };
       Configs[j].Shoot = new Keys[] { Keys.F7 };
       Configs[j].Dodge = new Keys[] { Keys.F19 };
 
@@ -94,7 +94,7 @@ namespace TFModFortRiseLoaderAI
       Configs[j].Up = new Keys[] { Keys.I };
       Configs[j].Left = new Keys[] { Keys.PageUp };
       Configs[j].Right = new Keys[] { Keys.PageDown };
-      Configs[j].Jump = new Keys[] { Keys.NumPad8 };
+      Configs[j].Jump = new Keys[] { Keys.NumPad8, Keys.D8 };
       Configs[j].Shoot = new Keys[] { Keys.F8 };
       Configs[j].Dodge = new Keys[] { Keys.F20 };
     }

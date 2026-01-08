@@ -13,11 +13,5 @@
 			"name": "CustomName",
 			"version": "1.0.3"
 		}
-	],
-	"optionalDependencies": [
-		{
-			"name": "Teuria.WiderSet",
-			"version": "0.7.0"
-		}
 	]
 }

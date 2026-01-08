@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using FortRise;
 using Microsoft.Extensions.Logging;
-using Microsoft.Xna.Framework;
-using MonoMod.ModInterop;
 using TowerFall;
 using TFModFortRiseCustomName;
-using System.IO;
-using System.Reflection;
 
 namespace TFModFortRiseLoaderAI
 {
@@ -50,21 +46,11 @@ namespace TFModFortRiseLoaderAI
         hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);
       }
 
-      //var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
-      //var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
-      var abstractionsPath = Path.Combine(".\\FortRise\\Mods\\tf-mod-fortrise-loader-ai\\TFModFortRiseAI.Abstractions", "TFModFortRiseAI.Abstractions.dll");
-
-      Assembly.LoadFrom(abstractionsPath);
-
       CustomNameModApi = context.Interop.GetApi<ICustomNameModApi>("CustomName");
       LoaderAIModApi = new ApiImplementation();
-      //typeof(ModExports).ModInterop();
-      //typeof(CustomNameImport).ModInterop();
-
-      //EightPlayerMod = IsModExists("WiderSetMod");
     }
 
-    public override object? GetApi()
+    public override object GetApi()
     {
       return new ApiImplementation();
     }
@@ -188,6 +174,10 @@ namespace TFModFortRiseLoaderAI
       for (int i = 0; i < TFGame.Players.Length; i++)
       {
         //TFModFortRiseLoaderAI.Logger.Info($"{i} TFGame.PlayerInputs[i].GetType().ToString() = {TFGame.PlayerInputs[i].GetType().ToString()}");
+        if (!TFGame.Players[i])
+        {
+          continue;
+        }
 
         if (!(InputName.Equals(TFGame.PlayerInputs[i].GetType().ToString())
             && TFModFortRiseLoaderAIModule.IsAgentPlaying(i, level))){

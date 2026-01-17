@@ -16,7 +16,7 @@ namespace TFModFortRiseLoaderAI
     internal Type[] Hookables = [
         typeof(MyLevel),
         typeof(MyRollcallElement),
-        typeof(MyTFGame),
+        typeof(MyTFGame), 
     ];
 
     public ICustomNameModApi CustomNameModApi { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using TFModFortRiseAI.Abstractions;
 using TowerFall;
 
 namespace TFModFortRiseLoaderAI

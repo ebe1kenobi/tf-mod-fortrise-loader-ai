@@ -101,7 +101,10 @@ namespace TFModFortRiseLoaderAI
     {
       for (var i = 0; i < TFGame.Players.Length; i++)
       {
-        TFGame.PlayerInputs[i] = TFModFortRiseLoaderAIModule.GetCurrentPlayerInput(i);
+        if (TFGame.Players[i])
+        {
+          TFGame.PlayerInputs[i] = TFModFortRiseLoaderAIModule.GetCurrentPlayerInput(i);
+        }
       }
     }
     public static void ForceStart_patch(Level __instance)

@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using TFModFortRiseAI.Abstractions;
 using TowerFall;
 
 namespace TFModFortRiseLoaderAI;
@@ -10,9 +7,8 @@ public sealed class ApiImplementation : ILoaderAIModApi
 {
   public ApiImplementation() {}
 
-  public bool RegisterAgent(List<IAgentLogic> logic)
+  public bool RegisterAgent(IList<ILoaderAIModApi.IAgentLogic> logic)
   {
-
     string type = logic[0].Type;
     Logger.Info($"TFModFortRiseLoaderAI RegisterAgent type={type}");
 

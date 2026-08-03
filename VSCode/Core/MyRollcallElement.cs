@@ -5,7 +5,6 @@ using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Cil;
-using MonoMod.ModInterop;
 using MonoMod.Utils;
 using TFModFortRiseCustomName;
 using TowerFall;

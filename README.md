@@ -1,44 +1,65 @@
-This is a Loader for fortrise Ai Mod.
+# LoaderAI
 
-* WiderSetMod supported
+An AI loader: it does not play by itself, it lets **AI mods** take control of an
+archer. With no AI mod installed it does nothing at all.
 
+WiderSetMod supported.
 
-This Mod does nothing if no Mod AI is in the Mods Directory.
+A mod for **FortRise 5** (>= 5.3.3). The FortRise 4 version (`tf-mod-fortrise-loader-ai`) is no longer maintained: fixes and new features only land in this repository.
 
-A skeleton project for an AI mod exists here : https://github.com/ebe1kenobi/tf-mod-fortrise-ai-example , can be used but the player will only jump, you need to implement the AI.
+## Installation
 
-A Simple AI using tf-mod-fortrise-ai-example : https://github.com/ebe1kenobi/tf-mod-fortrise-ai-simple
+1. Install FortRise 5 and start the game through `FortRise.exe`.
+2. Install the mods this one depends on first: **CustomName**.
+3. Copy `release/loaderai` (or the shipped folder) into `<TowerFall>/FortRise/Mods/`.
 
-A Python AI using tf-mod-fortrise-ai-example : https://github.com/ebe1kenobi/tf-mod-fortrise-ai-python
+Settings are under **Options > Mods > LoaderAI**.
+Data and log files live in `<TowerFall>/FortRise/Saves/LoaderAI/` and `<TowerFall>/FortRise/Logs/`.
 
-You need to use the LoaderAIImport.cs File to give the Loader your AI agent using 
-```
+## Usage
+
+### AI keyboard layout
+
+An AI is picked on the archer select screen: up and down arrows appear around the
+player name as soon as at least one agent is available.
+
+| Action | P1 | P2 | P3 | P4 | P5 | P6 | P7 | P8 |
+|--------|----|----|----|----|----|----|----|----|
+| Down | A | Z | D | F | G | H | J | K |
+| Up | Q | S | E | R | T | Y | U | I |
+| Left | O | P | W | C | B | F9 | F11 | Page Up |
+| Right | L | M | X | V | N | F10 | F12 | Page Down |
+| Jump / **pick the AI** | NumPad1 | NumPad2 | NumPad3 | NumPad4 | NumPad5 | NumPad6 | NumPad7 | NumPad8 |
+| Shoot / **drop the AI** | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 |
+| Dodge | F13 | F14 | F15 | F16 | F17 | F18 | F19 | F20 |
+
+In short: **NumPad 1-8** assigns an agent to the matching player, **F1-F8** removes
+it.
+
+## Writing your own AI mod
+
+A skeleton project is available at
+<https://github.com/ebe1kenobi/tf-mod-fortrise-ai-example>. As shipped, the archer
+only jumps; the AI itself is up to you.
+
+Examples built on top of it:
+
+- Simple AI: <https://github.com/ebe1kenobi/tf-mod-fortrise-ai-simple>
+- Python AI: <https://github.com/ebe1kenobi/tf-mod-fortrise-ai-python>
+- "Jimmy" AI, the most complete one: see the **AIJimmy** mod
+
+An AI mod registers its agents with the loader through `LoaderAIImport.cs`:
+
+```csharp
 LoaderAIImport.addAgent(AINAME, agents);
 ```
 
-If there is some Agent, the Archer select screen will display up and down arrow around the player name, and you will use the key for each player to choose the agent to use, below 
-P1 is human, P2 to P3 are 3 different AI agent
+## Build / deployment
 
-![image](https://github.com/user-attachments/assets/1f0dd3af-0cf9-43a3-89c5-e4bc4371f74b)
+| Script | Purpose |
+|--------|---------|
+| `script/release.bat` | build, then assemble into `release/` |
+| `script/deploy.bat` | copy `release/` into the TowerFall `Mods` folder |
+| `script/release_deploy.bat` | both, one after the other |
 
-
-**Keyboard config for each AI :**
-
-Select an AI with the nu pad 1 to 4 ans deselect with F1 to F4
-
-<a name="aikeyboardconfiguration">
-  
-|Action | P1 | P2 | P3 | P4 | P5 | P6 | P7 | P8 |
-| ----- | -- | -- | -- | -- | -- | -- | -- | -- |
-|Down   | A  | Z  | D  | F  | G  | H  | J  | K  |
-|Up     | Q  | S  | E  | R  | T  | Y  | U  | I  |
-|Left   | O  | P  | W  | C  | B  | F9  | F11  | PageUp  |
-|Right  | L  | M  | X  | V  | N  | F10  | F12  | PageDOwn  |
-|Jump / select AI  | NumPad1 | NumPad2 | NumPad3 | NumPad4 | NumPad5 | NumPad6 | NumPad7 | NumPad8 |
-|Shoot / deselect AI | F1 | F2 | F3 | F4 | F4 | F5 | F6 | F7 | F8 |
-|Dodge  | F13  | F14  | F15  | F16  | F17  | F18  | F19  | F20  |
-
-![image](https://github.com/user-attachments/assets/a1c194c1-9603-4547-98f4-e5057d2b8a7b)
-
-![image](https://github.com/user-attachments/assets/65b62c39-e25d-4dca-9cc6-230b5013af54)
-
+Paths (game folder, module name) are set in `script/config.bat`.

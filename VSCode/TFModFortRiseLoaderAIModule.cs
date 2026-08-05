@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using FortRise;
@@ -40,7 +40,7 @@ namespace TFModFortRiseLoaderAI
         //Debugger.Launch(); // Proposera d’attacher Visual Studio
       }
       Instance = this;
-      TFModFortRiseLoaderAI.Logger.Init("LoaderAI");
+      TFModFortRiseLoaderAI.Logger.Init(Meta.Name);
       foreach (var hookable in Hookables)
       {
         hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);

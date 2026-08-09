@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TowerFall;
 
 namespace TFModFortRiseLoaderAI;
@@ -90,7 +90,7 @@ public sealed class ApiImplementation : ILoaderAIModApi
   //public String GetPlayerName(int playerIndex)
   //{
   //  //return TFModFortRiseLoaderAIModule.GetPlayerName(playerIndex);
-  //  return TFModFortRiseLoaderAIModule.Instance.CustomNameModApi.GetPlayerName(playerIndex);
+  //  return TFModFortRiseLoaderAIModule.Instance.ProfilesModApi.GetPlayerName(playerIndex);
   //}
 
   //public bool IsAgentPlaying(int playerIndex, Level level)

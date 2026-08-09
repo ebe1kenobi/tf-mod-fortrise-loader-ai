@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
-namespace TFModFortRiseCustomName;
+namespace TFModFortRiseProfiles;
 
-public partial interface ICustomNameModApi
+public partial interface IProfilesModApi
 {
     void SetPlayerName(int playerIndex, String playerName);
     String GetPlayerName(int playerIndex);

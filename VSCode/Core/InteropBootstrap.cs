@@ -14,7 +14,7 @@
 //      if (done)
 //        return;
 
-//      typeof(CustomNameImport).ModInterop();
+//      typeof(ProfilesImport).ModInterop();
 //      //typeof(ModExports).ModInterop();
 
 //      done = true;

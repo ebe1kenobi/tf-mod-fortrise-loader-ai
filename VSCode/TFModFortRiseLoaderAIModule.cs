@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using FortRise;
 using Microsoft.Extensions.Logging;
 using TowerFall;
-using TFModFortRiseCustomName;
+using TFModFortRiseProfiles;
 
 namespace TFModFortRiseLoaderAI
 {
@@ -19,7 +19,7 @@ namespace TFModFortRiseLoaderAI
         typeof(MyTFGame), 
     ];
 
-    public ICustomNameModApi CustomNameModApi { get; set; }
+    public IProfilesModApi ProfilesModApi { get; set; }
     public ApiImplementation LoaderAIModApi { get; private set; }
 
 
@@ -37,7 +37,7 @@ namespace TFModFortRiseLoaderAI
     {
       if (!Debugger.IsAttached)
       {
-        //Debugger.Launch(); // Proposera d’attacher Visual Studio
+        //Debugger.Launch(); // Proposera dâ€™attacher Visual Studio
       }
       Instance = this;
       TFModFortRiseLoaderAI.Logger.Init(Meta.Name);
@@ -46,7 +46,10 @@ namespace TFModFortRiseLoaderAI
         hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);
       }
 
-      CustomNameModApi = context.Interop.GetApi<ICustomNameModApi>("CustomName");
+      // Les noms de joueurs viennent du mod Profiles, qui a repris ce role a
+      // CustomName. L'interop de FortRise construit son proxy sur la forme des
+      // membres : il suffit que IProfilesModApi decrive ce que Profiles expose.
+      ProfilesModApi = context.Interop.GetApi<IProfilesModApi>("Ebe1.Profiles");
       LoaderAIModApi = new ApiImplementation();
     }
 

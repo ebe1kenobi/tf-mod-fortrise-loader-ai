@@ -3,8 +3,8 @@
 
 //namespace TFModFortRiseLoaderAI
 //{
-//  [ModImportName("com.fortrise.TFModFortRiseCustomName")]
-//  public static class CustomNameImport
+//  [ModImportName("com.fortrise.TFModFortRiseProfiles")]
+//  public static class ProfilesImport
 //  {
 //    public static Action<int, String> SetPlayerName;
 //    public static Func<int, String> GetPlayerName;

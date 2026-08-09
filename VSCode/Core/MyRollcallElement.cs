@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Cil;
 using MonoMod.Utils;
-using TFModFortRiseCustomName;
+using TFModFortRiseProfiles;
 using TowerFall;
 
 namespace TFModFortRiseLoaderAI
@@ -47,9 +47,9 @@ namespace TFModFortRiseLoaderAI
     public static void ctor_patch(RollcallElement __instance, int playerIndex)
     {
       //typeof(EigthPlayerImport).ModInterop();
-      //typeof(CustomNameImport).ModInterop();
-      //var CustomNameModApi = TFModFortRiseLoaderAIModule.Instance.CustomNameModApi;
-      //TFModFortRiseLoaderAIModule.Instance.CustomNameModApi = TFModFortRiseLoaderAIModule.Instance.Context.Interop.GetApi<ICustomNameModApi>("TFModFortRiseCustomName");
+      //typeof(ProfilesImport).ModInterop();
+      //var ProfilesModApi = TFModFortRiseLoaderAIModule.Instance.ProfilesModApi;
+      //TFModFortRiseLoaderAIModule.Instance.ProfilesModApi = TFModFortRiseLoaderAIModule.Instance.Context.Interop.GetApi<IProfilesModApi>("TFModFortRiseProfiles");
       //if (widerSetApi is null)
       //{
       //  return 0;
@@ -66,14 +66,14 @@ namespace TFModFortRiseLoaderAI
       }
       if (!TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex).Equals("HUMAN"))
       {
-        TFModFortRiseLoaderAIModule.Instance.CustomNameModApi.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+        TFModFortRiseLoaderAIModule.Instance.ProfilesModApi.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
       }
-      //if (TFModFortRiseLoaderAIModule.Instance.CustomNameModApi.GetPlayerName == null) {
-      //  throw new Exception("CustomNameModApi.GetPlayerName is null");
+      //if (TFModFortRiseLoaderAIModule.Instance.ProfilesModApi.GetPlayerName == null) {
+      //  throw new Exception("ProfilesModApi.GetPlayerName is null");
       //}
       if (TFModFortRiseLoaderAIModule.GetPlayerTypePlaying(playerIndex).Equals("HUMAN"))
       {
-        humanPlayerName[playerIndex] = TFModFortRiseLoaderAIModule.Instance.CustomNameModApi.GetPlayerName(playerIndex);
+        humanPlayerName[playerIndex] = TFModFortRiseLoaderAIModule.Instance.ProfilesModApi.GetPlayerName(playerIndex);
       }
 
 
@@ -180,7 +180,7 @@ namespace TFModFortRiseLoaderAI
       if (input == null)
         return;
 
-      var CustomNameModApi = TFModFortRiseLoaderAIModule.Instance.CustomNameModApi;
+      var ProfilesModApi = TFModFortRiseLoaderAIModule.Instance.ProfilesModApi;
 
       var MenuUp = (bool)input.Get("MenuUp");
       var MenuDown = (bool)input.Get("MenuDown");
@@ -198,18 +198,18 @@ namespace TFModFortRiseLoaderAI
         {
           if (TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex].Equals("HUMAN"))
           {
-            humanPlayerName[playerIndex] = CustomNameModApi.GetPlayerName(playerIndex);
+            humanPlayerName[playerIndex] = ProfilesModApi.GetPlayerName(playerIndex);
           }
 
           TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = previousPlayerType;
 
           if (!previousPlayerType.Equals("HUMAN"))
           {
-            CustomNameModApi.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+            ProfilesModApi.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
           }
           if (previousPlayerType.Equals("HUMAN"))
           {
-            CustomNameModApi.SetPlayerName(playerIndex, humanPlayerName[playerIndex]);
+            ProfilesModApi.SetPlayerName(playerIndex, humanPlayerName[playerIndex]);
           }
         }
 
@@ -219,18 +219,18 @@ namespace TFModFortRiseLoaderAI
         {
           if (TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex].Equals("HUMAN"))
           {
-            humanPlayerName[playerIndex] = CustomNameModApi.GetPlayerName(playerIndex);
+            humanPlayerName[playerIndex] = ProfilesModApi.GetPlayerName(playerIndex);
           }
 
           TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = nextPlayerType;
 
           if (!nextPlayerType.Equals("HUMAN"))
           {
-            CustomNameModApi.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
+            ProfilesModApi.SetPlayerName(playerIndex, TFModFortRiseLoaderAIModule.GetAIPlayerName(playerIndex));
           }
           if (nextPlayerType.Equals("HUMAN"))
           {
-            CustomNameModApi.SetPlayerName(playerIndex, humanPlayerName[playerIndex]);
+            ProfilesModApi.SetPlayerName(playerIndex, humanPlayerName[playerIndex]);
           }
         }
       }

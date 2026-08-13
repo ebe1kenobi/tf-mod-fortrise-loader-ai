@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using FortRise;
@@ -23,7 +23,34 @@ namespace TFModFortRiseLoaderAI
     public ApiImplementation LoaderAIModApi { get; private set; }
 
 
-    public static bool EightPlayerMod;
+    /// <summary>
+    /// Nombre d'emplacements de joueur du jeu : 4 normalement, 8 quand le mod
+    /// WiderSet est actif.
+    ///
+    /// Lu sur les tableaux du jeu plutot que demande a WiderSet : c'est LUI qui les
+    /// agrandit, ils disent donc la verite sans qu'on ait a interroger un mod ni a
+    /// deviner s'il est la. L'ancien drapeau EightPlayerMod, herite de l'interop
+    /// FortRise 4, n'etait plus affecte par personne depuis la migration : il valait
+    /// toujours faux, et les agents s'arretaient donc a quatre.
+    ///
+    /// Borne a 8 : les tables internes de ce mod (nbPlayerType, currentPlayerType)
+    /// sont dimensionnees pour huit.
+    /// </summary>
+    public static int PlayerSlots
+    {
+      get
+      {
+        int slots = 4;
+
+        if (TFGame.Players != null && TFGame.Players.Length > slots)
+          slots = TFGame.Players.Length;
+
+        if (TFGame.PlayerInputs != null && TFGame.PlayerInputs.Length > slots)
+          slots = TFGame.PlayerInputs.Length;
+
+        return slots > 8 ? 8 : slots;
+      }
+    }
     public static bool canAddAgent = false;
     public static Dictionary<int, String> currentPlayerType = new Dictionary<int, String>(8);
     public static Dictionary<int, PlayerInput> savedHumanPlayerInput = new Dictionary<int, PlayerInput>(8);
@@ -40,7 +67,7 @@ namespace TFModFortRiseLoaderAI
         //Debugger.Launch(); // Proposera dâ€™attacher Visual Studio
       }
       Instance = this;
-      TFModFortRiseLoaderAI.Logger.Init(Meta.Name);
+      TFModFortRiseLoaderAI.Logger.Init(logger);
       foreach (var hookable in Hookables)
       {
         hookable.GetMethod(nameof(IHookable.Load))!.Invoke(null, [context.Harmony]);
@@ -49,7 +76,7 @@ namespace TFModFortRiseLoaderAI
       // Les noms de joueurs viennent du mod Profiles, qui a repris ce role a
       // CustomName. L'interop de FortRise construit son proxy sur la forme des
       // membres : il suffit que IProfilesModApi decrive ce que Profiles expose.
-      ProfilesModApi = context.Interop.GetApi<IProfilesModApi>("Ebe1.Profiles");
+      ProfilesModApi = context.Interop.GetApi<IProfilesModApi>("Archer");
       LoaderAIModApi = new ApiImplementation();
     }
 

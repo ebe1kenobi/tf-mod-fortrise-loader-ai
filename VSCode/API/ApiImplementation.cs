@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TowerFall;
 
 namespace TFModFortRiseLoaderAI;
@@ -15,7 +15,11 @@ public sealed class ApiImplementation : ILoaderAIModApi
     if (TFModFortRiseLoaderAIModule.listAgentByType.ContainsKey(type))
       return false;
 
-    int max = TFModFortRiseLoaderAIModule.EightPlayerMod ? 8 : 4;
+    // Autant d'agents que le jeu a d'emplacements - huit avec WiderSet - dans la
+    // limite de ce que le mod d'IA a fourni comme logiques.
+    int max = TFModFortRiseLoaderAIModule.PlayerSlots;
+    if (logic.Count < max)
+      max = logic.Count;
 
     Agent[] agents = new Agent[max];
 
@@ -25,6 +29,13 @@ public sealed class ApiImplementation : ILoaderAIModApi
 
       var input = new Input(i);
       agents[i] = new AgentAdapter(logic[i], i, input);
+
+      // Le tableau des entrees peut etre plus court que le nombre d'emplacements :
+      // l'agent existe quand meme, il sera branche quand la place s'ouvrira.
+      if (TFGame.PlayerInputs == null || i >= TFGame.PlayerInputs.Length)
+      {
+        continue;
+      }
 
       if (null != TFGame.PlayerInputs[i])
       {

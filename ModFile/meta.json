@@ -1,4 +1,4 @@
-﻿{
+{
 	"name": "LoaderAI",
 	"version": "1.0.7",
 	"author": "ebe1.kenobi",
@@ -10,7 +10,7 @@
 			"version": "5.3.3"
 		},
 		{
-			"name": "Ebe1.Profiles",
+			"name": "Archer",
 			"version": "1.0.0"
 		}
 	]

@@ -3,7 +3,7 @@ using TowerFall;
 
 namespace TFModFortRiseLoaderAI;
 
-public sealed class ApiImplementation : ILoaderAIModApi
+public sealed class ApiImplementation : ILoaderAIModApi, ILoaderAIAgentsApi
 {
   public ApiImplementation() {}
 
@@ -112,5 +112,89 @@ public sealed class ApiImplementation : ILoaderAIModApi
   public bool CanAddAgent()
   {
     return TFModFortRiseLoaderAIModule.canAddAgent;
+  }
+
+  // ------------------------------------------------------------------
+  // ILoaderAIAgentsApi
+  // ------------------------------------------------------------------
+
+  /// <summary>
+  /// Les types enregistres, dans leur ordre d'enregistrement. listAgentType est une
+  /// table indexee par rang plutot qu'une liste : on la parcourt par ses rangs pour
+  /// garder cet ordre, que l'ecran de selection suit deja.
+  /// </summary>
+  public string[] GetAgentTypes()
+  {
+    var types = new List<string>();
+
+    for (int i = 0; i < TFModFortRiseLoaderAIModule.listAgentType.Count; i++)
+    {
+      if (TFModFortRiseLoaderAIModule.listAgentType.TryGetValue(i, out string type)
+          && !string.IsNullOrEmpty(type))
+      {
+        types.Add(type);
+      }
+    }
+
+    return types.ToArray();
+  }
+
+  public string GetPlayerType(int playerIndex)
+  {
+    if (TFModFortRiseLoaderAIModule.currentPlayerType.TryGetValue(playerIndex, out string type)
+        && !string.IsNullOrEmpty(type))
+    {
+      return type;
+    }
+
+    return HUMAN;
+  }
+
+  private const string HUMAN = "HUMAN";
+
+  /// <summary>
+  /// Bascule un emplacement. Ecrit le type ET rebranche l'entree : le premier decide
+  /// qui joue, la seconde est ce que le jeu lit reellement. Ne poser que le type
+  /// laissait l'agent choisi sans effet jusqu'a ce qu'autre chose rebranche l'entree.
+  /// </summary>
+  public bool SetPlayerType(int playerIndex, string type)
+  {
+    if (playerIndex < 0 || playerIndex >= TFModFortRiseLoaderAIModule.PlayerSlots)
+    {
+      return false;
+    }
+
+    if (string.IsNullOrEmpty(type))
+    {
+      type = HUMAN;
+    }
+
+    if (type != HUMAN && !TFModFortRiseLoaderAIModule.listAgentByType.ContainsKey(type))
+    {
+      // Type inconnu : le mod d'IA n'est pas installe, ou ne s'est pas encore
+      // enregistre. On laisse l'emplacement tel quel plutot que de le casser.
+      Logger.Info($"SetPlayerType({playerIndex}) : type '{type}' inconnu");
+      return false;
+    }
+
+    // Revenir a l'humain n'a de sens que si son entree a ete mise de cote au
+    // demarrage - sinon l'emplacement n'aurait plus rien pour le piloter.
+    if (type == HUMAN && !TFModFortRiseLoaderAIModule.HumanControlExists(playerIndex))
+    {
+      return false;
+    }
+
+    TFModFortRiseLoaderAIModule.currentPlayerType[playerIndex] = type;
+
+    PlayerInput input = TFModFortRiseLoaderAIModule.GetCurrentPlayerInput(playerIndex);
+
+    if (input != null && TFGame.PlayerInputs != null
+        && playerIndex < TFGame.PlayerInputs.Length)
+    {
+      TFGame.PlayerInputs[playerIndex] = input;
+    }
+
+    Logger.Info($"SetPlayerType({playerIndex}) -> {type}");
+    return true;
   }
 }

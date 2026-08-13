@@ -10,8 +10,12 @@ A mod for **FortRise 5** (>= 5.3.3). The FortRise 4 version (`tf-mod-fortrise-lo
 ## Installation
 
 1. Install FortRise 5 and start the game through `FortRise.exe`.
-2. Install the mods this one depends on first: **CustomName**.
-3. Copy `release/loaderai` (or the shipped folder) into `<TowerFall>/FortRise/Mods/`.
+2. Install the mod this one depends on first: **Archer**.
+3. Copy `release/tf-mod-fortrise-loader-ai` into `<TowerFall>/FortRise/Mods/`.
+
+It used to depend on **CustomName** for the player names shown on the archer select
+screen. CustomName no longer exports the interop delegates it relied on, and per-player
+naming has moved to the **Archer** mod - which is what `meta.json` requires now.
 
 Settings are under **Options > Mods > LoaderAI**.
 Data and log files live in `<TowerFall>/FortRise/Saves/LoaderAI/` and `<TowerFall>/FortRise/Logs/`.
@@ -35,24 +39,6 @@ player name as soon as at least one agent is available.
 
 In short: **NumPad 1-8** assigns an agent to the matching player, **F1-F8** removes
 it.
-
-## Writing your own AI mod
-
-A skeleton project is available at
-<https://github.com/ebe1kenobi/tf-mod-fortrise-ai-example>. As shipped, the archer
-only jumps; the AI itself is up to you.
-
-Examples built on top of it:
-
-- Simple AI: <https://github.com/ebe1kenobi/tf-mod-fortrise-ai-simple>
-- Python AI: <https://github.com/ebe1kenobi/tf-mod-fortrise-ai-python>
-- "Jimmy" AI, the most complete one: see the **AIJimmy** mod
-
-An AI mod registers its agents with the loader through `LoaderAIImport.cs`:
-
-```csharp
-LoaderAIImport.addAgent(AINAME, agents);
-```
 
 ## Build / deployment
 

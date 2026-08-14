@@ -8,7 +8,7 @@ set PDB_MOD_FILE_NAME=TFModFortRiseLoaderAI.pdb
 
 set MODULE_DIR_NAME=tf-mod-fortrise-loader-ai
 
-set REPO_PATH=D:\__dev\code\FR5tf-mod-fortrise-loader-ai\
+set REPO_PATH=D:\__dev\code\tf-mod-fortrise-loader-ai\
 set REPO_BUILD_PATH=%REPO_PATH%VSCode\bin\Debug\net10.0\
 set REPO_RELEASE_PATH=%REPO_PATH%release\
 set REPO_RELEASE_MOD_PATH=%REPO_RELEASE_PATH%\tf-mod-fortrise-loader-ai\

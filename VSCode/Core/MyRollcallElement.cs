@@ -28,7 +28,8 @@ namespace TFModFortRiseLoaderAI
 
       harmony.Patch(
           AccessTools.DeclaredMethod(typeof(RollcallElement), nameof(RollcallElement.Render)),
-          prefix: new HarmonyMethod(Render_patch)
+          prefix: new HarmonyMethod(Render_patch),
+          postfix: new HarmonyMethod(Keys_postfix)
       );
       harmony.Patch(
           AccessTools.DeclaredMethod(typeof(RollcallElement), "NotJoinedUpdate"),
@@ -83,13 +84,13 @@ namespace TFModFortRiseLoaderAI
       upArrow[playerIndex].Visible = true;
       upArrow[playerIndex].Color = color;
       __instance.Add((Component)upArrow[playerIndex]);
-      upArrow[playerIndex].X = -10;
+      upArrow[playerIndex].X = -4;
       upArrow[playerIndex].Y = 0;
 
       downArrow[playerIndex] = new Image(TFGame.Atlas["versus/playerIndicator"]);
       downArrow[playerIndex].Visible = true;
       __instance.Add((Component)downArrow[playerIndex]);
-      downArrow[playerIndex].X = -10;
+      downArrow[playerIndex].X = -4;
       downArrow[playerIndex].Y = 0;
       downArrow[playerIndex].Color = color;
 
@@ -121,7 +122,17 @@ namespace TFModFortRiseLoaderAI
       var dynData = DynamicData.For(__instance);
       int playerIndex = (int)dynData.Get("playerIndex");
       //SetPlayerName(playerIndex);
-      if (((Image)dynData.Get("rightArrow")).Visible && TFModFortRiseLoaderAIModule.IsThereOtherPlayerType(playerIndex))
+      // **Les fleches haut/bas s'affichent AUSSI sur une case sans humain.**
+      //
+      // Elles etaient conditionnees a la fleche droite du jeu, celle qui sert a changer
+      // d'archer : cette fleche n'apparait qu'une fois la case rejointe par un humain,
+      // si bien qu'un emplacement tenu par une IA - ou vide - n'annoncait rien. Le geste
+      // marchait pourtant : NotJoinedUpdate lit deja MenuUp et MenuDown dans cet etat.
+      // On ne montrait simplement pas qu'il existait.
+      //
+      // La seule condition qui compte est donc "y a-t-il autre chose a choisir", et
+      // c'est celle qui reste.
+      if (TFModFortRiseLoaderAIModule.IsThereOtherPlayerType(playerIndex))
       {
         if ("NONE".Equals(TFModFortRiseLoaderAIModule.PreviousPlayerTypeExist(playerIndex)))
         {
@@ -147,8 +158,8 @@ namespace TFModFortRiseLoaderAI
         float arrowSineValue = (float)arrowSine.Get("Value");
         float arrowWiggleValue = (float)arrowWiggle.Get("Value");
 
-        int upY = -73;
-        int downY = -57;
+        int upY = -62;
+        int downY = -46;
         if (TFGame.Players.Length > 4) {
           //if (EigthPlayerImport.LaunchedEightPlayer())
           //{
@@ -170,6 +181,84 @@ namespace TFModFortRiseLoaderAI
       dynData.Dispose();
 
     }
+    /// <summary>Hauteur des deux lignes, de part et d'autre du centre du portrait.</summary>
+    private const float KeysOffsetY = 7f;
+
+    /// <summary>
+    /// Ecrit au milieu du portrait le NOM des deux touches qui changent d'IA.
+    ///
+    /// Les triangles disent qu'on peut monter et descendre ; ils ne disent pas avec
+    /// quoi, et c'est precisement ce qui manquait. Un emplacement tenu par une IA n'a
+    /// le plus souvent pas de manette : son entree est le clavier de secours, ou le
+    /// haut et le bas du joueur 1 sont A et Q. Les fleches du dessin laissaient croire
+    /// aux fleches du clavier.
+    ///
+    /// **Pose par-dessus, sans rien retirer.** Le dessin des triangles reste ce qu'il
+    /// est ; ces deux lignes ne font que le completer, le temps de voir a l'usage ce
+    /// qui merite de remplacer quoi.
+    ///
+    /// Seulement sur les emplacements tenus par une IA, et seulement s'il y a
+    /// effectivement autre chose a choisir : ailleurs ce serait du texte sur un visage
+    /// pour annoncer un geste sans effet.
+    /// </summary>
+    public static void Keys_postfix(RollcallElement __instance)
+    {
+      DynamicData dynData = null;
+
+      try
+      {
+        dynData = DynamicData.For(__instance);
+        int playerIndex = (int)dynData.Get("playerIndex");
+
+        if (!TFModFortRiseLoaderAIModule.IsThereOtherPlayerType(playerIndex))
+        {
+          return;
+        }
+
+        if (!TFModFortRiseLoaderAIModule.currentPlayerType.TryGetValue(playerIndex, out string type)
+            || "HUMAN".Equals(type) || "NONE".Equals(type))
+        {
+          return;
+        }
+
+        var input = dynData.Get("input") as PlayerInput;
+        if (input == null)
+        {
+          return;
+        }
+
+        string up = ControlNames.Up(input);
+        string down = ControlNames.Down(input);
+
+        // A huit joueurs les portraits sont deux fois plus serres : le texte doit
+        // retrecir pour ne pas deborder sur le voisin.
+        float scale = TFGame.Players.Length > 4 ? 0.6f : 0.8f;
+
+        if (!string.IsNullOrEmpty(up))
+        {
+          Draw.OutlineTextCentered(TFGame.Font, up,
+              __instance.Position + new Vector2(0f, -KeysOffsetY),
+              Color.White, Color.Black, scale);
+        }
+
+        if (!string.IsNullOrEmpty(down))
+        {
+          Draw.OutlineTextCentered(TFGame.Font, down,
+              __instance.Position + new Vector2(0f, KeysOffsetY),
+              Color.White, Color.Black, scale);
+        }
+      }
+      catch (Exception e)
+      {
+        // L'ecran de selection doit rester utilisable : sans lui on ne lance plus rien.
+        Logger.Error($"[Rollcall] nom des touches non affiche : {e.Message}");
+      }
+      finally
+      {
+        dynData?.Dispose();
+      }
+    }
+
     public static void NotJoinedUpdate_patch(Level __instance)
     {
       var dynData = DynamicData.For(__instance);

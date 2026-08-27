@@ -230,22 +230,24 @@ namespace TFModFortRiseLoaderAI
         string up = ControlNames.Up(input);
         string down = ControlNames.Down(input);
 
-        // A huit joueurs les portraits sont deux fois plus serres : le texte doit
-        // retrecir pour ne pas deborder sur le voisin.
-        float scale = TFGame.Players.Length > 4 ? 0.6f : 0.8f;
-
+        // **Taille PLEINE, jamais reduite.** La police du jeu est faite de pixels
+        // dessines un par un : la reduire ne rapetisse pas les lettres, elle en efface
+        // des traits. A 0,6 il ne restait que des points blancs, illisibles au point
+        // qu'on ne reconnaissait meme pas du texte. Mieux vaut deux lignes courtes bien
+        // lisibles qu'une longue en miettes - c'est pour cela que le nom de la touche
+        // est seul sur sa ligne, sous une fleche qui dit le sens.
         if (!string.IsNullOrEmpty(up))
         {
-          Draw.OutlineTextCentered(TFGame.Font, up,
+          Draw.OutlineTextCentered(TFGame.Font, ControlNames.Safe("^ " + up),
               __instance.Position + new Vector2(0f, -KeysOffsetY),
-              Color.White, Color.Black, scale);
+              Color.White, Color.Black, 1f);
         }
 
         if (!string.IsNullOrEmpty(down))
         {
-          Draw.OutlineTextCentered(TFGame.Font, down,
+          Draw.OutlineTextCentered(TFGame.Font, ControlNames.Safe("v " + down),
               __instance.Position + new Vector2(0f, KeysOffsetY),
-              Color.White, Color.Black, scale);
+              Color.White, Color.Black, 1f);
         }
       }
       catch (Exception e)

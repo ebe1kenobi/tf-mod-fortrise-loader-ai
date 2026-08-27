@@ -153,7 +153,7 @@ namespace TFModFortRiseLoaderAI
     /// pendant le rendu, c'est tout le jeu qui tombe. Les noms de touches d'un clavier
     /// non anglais peuvent en contenir.
     /// </summary>
-    private static string Safe(string text)
+    public static string Safe(string text)
     {
       if (string.IsNullOrEmpty(text))
       {

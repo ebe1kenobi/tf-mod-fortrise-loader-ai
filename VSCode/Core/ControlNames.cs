@@ -22,33 +22,71 @@ namespace TFModFortRiseLoaderAI
   /// </summary>
   internal static class ControlNames
   {
-    /// <summary>Nom de la touche qui fait monter dans la liste des IA.</summary>
-    public static string Up(PlayerInput input)
+    /// <summary>Les cinq gestes de l'ecran de selection dont on montre la touche.</summary>
+    public enum Action
     {
-      if (input is XGamepadInput pad)
-      {
-        return First(pad.Config?.Up);
-      }
+      /// <summary>Monter dans la liste des IA.</summary>
+      Up,
 
-      if (input is KeyboardInput keyboard)
-      {
-        return First(keyboard.Config?.Up);
-      }
+      /// <summary>Descendre dans la liste des IA.</summary>
+      Down,
 
-      return null;
+      /// <summary>Archer precedent.</summary>
+      Left,
+
+      /// <summary>Archer suivant.</summary>
+      Right,
+
+      /// <summary>
+      /// Tenue de rechange de l'archer.
+      ///
+      /// <b>Elle se joue sur la touche d'ESQUIVE</b>, ce qui ne se devine pas : le jeu
+      /// definit <c>MenuAlt</c> comme <c>Config.Dodge</c>, aussi bien au clavier qu'a la
+      /// manette. Sur un emplacement d'IA, l'esquive du joueur 1 est F13 - une touche
+      /// que personne n'a sur son clavier et que personne n'irait chercher.
+      /// </summary>
+      Alt,
     }
 
-    /// <summary>Nom de la touche qui fait descendre dans la liste des IA.</summary>
-    public static string Down(PlayerInput input)
+    /// <summary>Nom de la premiere touche assignee a ce geste, ou null.</summary>
+    public static string Of(PlayerInput input, Action action)
     {
       if (input is XGamepadInput pad)
       {
-        return First(pad.Config?.Down);
+        GamepadConfig config = pad.Config;
+
+        if (config == null)
+        {
+          return null;
+        }
+
+        switch (action)
+        {
+          case Action.Up: return First(config.Up);
+          case Action.Down: return First(config.Down);
+          case Action.Left: return First(config.Left);
+          case Action.Right: return First(config.Right);
+          default: return First(config.Dodge);
+        }
       }
 
       if (input is KeyboardInput keyboard)
       {
-        return First(keyboard.Config?.Down);
+        KeyboardConfig config = keyboard.Config;
+
+        if (config == null)
+        {
+          return null;
+        }
+
+        switch (action)
+        {
+          case Action.Up: return First(config.Up);
+          case Action.Down: return First(config.Down);
+          case Action.Left: return First(config.Left);
+          case Action.Right: return First(config.Right);
+          default: return First(config.Dodge);
+        }
       }
 
       return null;

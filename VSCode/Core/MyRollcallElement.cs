@@ -181,21 +181,26 @@ namespace TFModFortRiseLoaderAI
       dynData.Dispose();
 
     }
-    /// <summary>Hauteur des deux lignes, de part et d'autre du centre du portrait.</summary>
-    private const float KeysOffsetY = 7f;
+    /// <summary>Ecart horizontal des deux touches de changement d'archer.</summary>
+    private const float KeysOffsetX = 22f;
 
     /// <summary>
-    /// Ecrit au milieu du portrait le NOM des deux touches qui changent d'IA.
+    /// Ecrit sur le portrait le NOM des touches qui servent ici.
     ///
     /// Les triangles disent qu'on peut monter et descendre ; ils ne disent pas avec
-    /// quoi, et c'est precisement ce qui manquait. Un emplacement tenu par une IA n'a
-    /// le plus souvent pas de manette : son entree est le clavier de secours, ou le
-    /// haut et le bas du joueur 1 sont A et Q. Les fleches du dessin laissaient croire
-    /// aux fleches du clavier.
+    /// quoi, et c'est ce qui manquait. Un emplacement tenu par une IA n'a le plus
+    /// souvent pas de manette : son entree est le clavier de secours, ou le haut et le
+    /// bas du joueur 1 sont A et Q. Les fleches du dessin laissaient croire aux fleches
+    /// du clavier.
+    ///
+    /// <b>Cinq touches et pas deux, parce que trois autres se devinent encore moins.</b>
+    /// Gauche et droite changent d'archer, et la tenue de rechange se joue sur la touche
+    /// d'ESQUIVE - le jeu definit <c>MenuAlt</c> comme <c>Config.Dodge</c>. Sur un
+    /// emplacement d'IA, cette esquive est F13 pour le joueur 1 : une touche que
+    /// personne n'a sur son clavier, et que personne n'irait chercher.
     ///
     /// **Pose par-dessus, sans rien retirer.** Le dessin des triangles reste ce qu'il
-    /// est ; ces deux lignes ne font que le completer, le temps de voir a l'usage ce
-    /// qui merite de remplacer quoi.
+    /// est ; ces lignes ne font que le completer.
     ///
     /// Seulement sur les emplacements tenus par une IA, et seulement s'il y a
     /// effectivement autre chose a choisir : ailleurs ce serait du texte sur un visage
@@ -227,28 +232,18 @@ namespace TFModFortRiseLoaderAI
           return;
         }
 
-        string up = ControlNames.Up(input);
-        string down = ControlNames.Down(input);
+        Vector2 at = __instance.Position;
 
-        // **Taille PLEINE, jamais reduite.** La police du jeu est faite de pixels
-        // dessines un par un : la reduire ne rapetisse pas les lettres, elle en efface
-        // des traits. A 0,6 il ne restait que des points blancs, illisibles au point
-        // qu'on ne reconnaissait meme pas du texte. Mieux vaut deux lignes courtes bien
-        // lisibles qu'une longue en miettes - c'est pour cela que le nom de la touche
-        // est seul sur sa ligne, sous une fleche qui dit le sens.
-        if (!string.IsNullOrEmpty(up))
-        {
-          Draw.OutlineTextCentered(TFGame.Font, ControlNames.Safe("^ " + up),
-              __instance.Position + new Vector2(0f, -KeysOffsetY),
-              Color.White, Color.Black, 1f);
-        }
+        // Taille PLEINE, jamais reduite : la police du jeu est faite de pixels dessines
+        // un par un, et la reduire n'en rapetisse pas les lettres, elle en efface des
+        // traits. A 0,6 il ne restait que des points blancs.
+        Line(ControlNames.Of(input, ControlNames.Action.Up), "^ ", at, 0f, -18f);
+        Line(ControlNames.Of(input, ControlNames.Action.Down), "v ", at, 0f, 6f);
 
-        if (!string.IsNullOrEmpty(down))
-        {
-          Draw.OutlineTextCentered(TFGame.Font, ControlNames.Safe("v " + down),
-              __instance.Position + new Vector2(0f, KeysOffsetY),
-              Color.White, Color.Black, 1f);
-        }
+        Line(ControlNames.Of(input, ControlNames.Action.Left), "<", at, -KeysOffsetX, -6f);
+        Line(ControlNames.Of(input, ControlNames.Action.Right), ">", at, KeysOffsetX, -6f);
+
+        Line(ControlNames.Of(input, ControlNames.Action.Alt), "ALT ", at, 0f, 18f);
       }
       catch (Exception e)
       {
@@ -259,6 +254,24 @@ namespace TFModFortRiseLoaderAI
       {
         dynData?.Dispose();
       }
+    }
+
+    /// <summary>
+    /// Une ligne, prefixee du signe qui dit a quoi elle sert.
+    ///
+    /// Le libelle ENTIER passe par le filtre de police, et non le seul nom de touche :
+    /// le signe ajoute devant n'est pas garanti dessinable, et un caractere inconnu fait
+    /// lever MeasureString en plein rendu - donc tomber le jeu.
+    /// </summary>
+    private static void Line(string key, string sign, Vector2 at, float dx, float dy)
+    {
+      if (string.IsNullOrEmpty(key))
+      {
+        return;
+      }
+
+      Draw.OutlineTextCentered(TFGame.Font, ControlNames.Safe(sign + key),
+          at + new Vector2(dx, dy), Color.White, Color.Black, 1f);
     }
 
     public static void NotJoinedUpdate_patch(Level __instance)

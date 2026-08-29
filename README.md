@@ -29,16 +29,44 @@ player name as soon as at least one agent is available.
 
 | Action | P1 | P2 | P3 | P4 | P5 | P6 | P7 | P8 |
 |--------|----|----|----|----|----|----|----|----|
-| Down | A | Z | D | F | G | H | J | K |
-| Up | Q | S | E | R | T | Y | U | I |
+| Down | Q | S | D | F | G | H | J | K |
+| Up | A | Z | E | R | T | Y | U | I |
 | Left | O | P | W | C | B | F9 | F11 | Page Up |
 | Right | L | M | X | V | N | F10 | F12 | Page Down |
-| Jump / **pick the AI** | NumPad1 | NumPad2 | NumPad3 | NumPad4 | NumPad5 | NumPad6 | NumPad7 | NumPad8 |
+| Jump / **pick the AI** | NumPad1 or 1 | NumPad2 or 2 | NumPad3 or 3 | NumPad4 or 4 | NumPad5 or 5 | NumPad6 or 6 | NumPad7 or 7 | NumPad8 or 8 |
 | Shoot / **drop the AI** | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 |
-| Dodge | F13 | F14 | F15 | F16 | F17 | F18 | F19 | F20 |
+| Dodge / **alt costume** | F13 | F14 | F15 | F16 | F17 | F18 | F19 | F20 |
 
-In short: **NumPad 1-8** assigns an agent to the matching player, **F1-F8** removes
-it.
+In short: **1-8** assigns an agent to the matching player - the top row or the number pad,
+either works, which matters on a laptop with no pad - and **F1-F8** removes it.
+
+> The first two columns used to be printed the wrong way round here: P1 is `Q` down and
+> `A` up, P2 is `S` down and `Z` up. From P3 onwards the pairs read as they always did.
+
+### The keys are written on the portrait
+
+A slot held by an AI **shows the name of the key** for each gesture, around the portrait:
+the two arrows above and below, the archer arrows left and right, and `ALT` underneath for
+the alternative costume.
+
+Without it the two triangles announced that you could move up and down to change AI, but
+not *with what*. A slot held by an AI usually has no controller: its input is the fallback
+keyboard in the table above, where P1's up and down are `A` and `Q` — not the arrow keys
+the triangles let you assume. The alternative costume is worse still: the game defines
+`MenuAlt` as `Config.Dodge`, so on an AI slot it is `F13`, a key nobody has and nobody
+would go looking for.
+
+The label is read off **the element's own input**, not deduced from the player number.
+That instance is what the select screen actually questions, and depending on whether a
+human controller was set aside it is either that controller's mapping or the fallback
+keyboard. Building the name from the index would have shown the right key half the time,
+with nothing to signal which half.
+
+Names are drawn at **full size**. The game's font is pixels drawn one by one: shrinking it
+does not make smaller letters, it deletes strokes — at 0.6 there were only white dots
+left. Every label also goes through a character filter, whole and not just the key name:
+`TFGame.Font` throws while measuring an unsupported character, which would bring the game
+down mid-render.
 
 ## Build / deployment
 

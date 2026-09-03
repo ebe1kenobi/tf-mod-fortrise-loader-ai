@@ -1,5 +1,9 @@
 # LoaderAI
 
+<img width="943" height="595" alt="image" src="https://github.com/user-attachments/assets/0e553f12-b58f-4116-88d0-62d2ecd61f9c" />
+
+<img width="779" height="195" alt="image" src="https://github.com/user-attachments/assets/0a24f4ca-0d29-4986-ba79-e1654e604e09" />
+
 An AI loader: it does not play by itself, it lets **AI mods** take control of an
 archer. With no AI mod installed it does nothing at all.
 
